@@ -47,7 +47,7 @@ class Faq extends Model
 
     public function scopeSearch(Builder $query, Request $request): array
     {
-        $query->where('answer', 'like', '%'.$request->term.'%')->orWhere('question', 'like', '%'.$request->term.'%');
+        $query->where('answer', 'ilike', '%'.$request->term.'%')->orWhere('question', 'like', '%'.$request->term.'%');
 
         return [
             'count' => $query->count(),

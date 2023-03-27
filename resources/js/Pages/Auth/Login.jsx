@@ -48,6 +48,7 @@ export default function Login({ status, canResetPassword }) {
                         autoComplete="username"
                         isFocused={true}
                         handleChange={onHandleChange}
+                        placeholder="e-mail"
                     />
 
                     <InputError message={errors.email} className="mt-0" />
@@ -62,6 +63,7 @@ export default function Login({ status, canResetPassword }) {
                         className="block w-full mt-1"
                         autoComplete="current-password"
                         handleChange={onHandleChange}
+                        placeholder="Senha"
                     />
                     <InputError message={errors.password} className="mt-0" />
                 </div>

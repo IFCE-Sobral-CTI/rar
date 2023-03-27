@@ -120,8 +120,8 @@ class User extends Authenticatable
     public function scopeSearch(Builder $query, Request $request): array
     {
         $query->with('permission')
-            ->where('name', 'like', "%{$request->term}%")
-            ->orWhere('email', 'like', "%{$request->term}%");
+            ->where('name', 'ilike', "%{$request->term}%")
+            ->orWhere('email', 'ilike', "%{$request->term}%");
 
         return [
             'count' => $query->count(),

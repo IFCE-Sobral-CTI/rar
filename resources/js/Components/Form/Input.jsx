@@ -1,44 +1,54 @@
-import React, { useEffect, useRef, useState } from "react";
+import { usePage } from '@inertiajs/react';
+import React, { useEffect, useState } from 'react';
+import { useIMask } from 'react-imask';
 
-function Input({
+export default function Input({
     type = 'text',
     name,
-    value,
     className,
+    autoComplete,
+    required,
     isFocused,
     handleChange,
-    required,
-    autoComplete,
-    placeholder = '',
+    mask = null,
+    placeholder,
+    processing,
+    initialValue = null
 }) {
-
-    const input = useRef();
+    const [ opts, setOpts ] = useState({ mask: mask });
+    const {
+        ref,
+        value,
+        setValue,
+        maskRef,
+        unmaskedValue,
+        setUnmaskedValue,
+        typedValue,
+        setTypedValue,
+    } = useIMask(opts);
 
     useEffect(() => {
-        if (isFocused) {
-            input.current.focus();
-        }
+        if (initialValue)
+            setValue(initialValue);
     }, []);
 
     return (
-        <>
+        <div className="flex flex-col items-start">
             <input
+                value={mask? value: initialValue}
                 type={type}
                 name={name}
-                id={name}
-                value={value?? ''}
                 className={
                     `w-full border-neutral-400 focus:border-emerald-300 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 rounded-lg shadow-sm ` +
                     className
                 }
-                ref={input}
-                onChange={(e) => handleChange(e)}
+                ref={ref}
                 required={required}
-                autoComplete={autoComplete}
+                onChange={(e) => handleChange(e)}
                 placeholder={placeholder}
+                autoFocus={isFocused?? false}
+                disabled={processing}
             />
-        </>
-    )
+        </div>
+    );
 }
-
-export default Input;

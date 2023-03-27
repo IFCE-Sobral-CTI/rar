@@ -84,8 +84,8 @@ class Rule extends Model
             ->whereHas('group', function(Builder $query) use ($request) {
                 $query->where('description', 'like', "%{$request->term}%");
             })
-            ->orWhere('description', 'like', "%{$request->term}%")
-            ->orWhere('control', 'like', "%{$request->term}%");
+            ->orWhere('description', 'ilike', "%{$request->term}%")
+            ->orWhere('control', 'ilike', "%{$request->term}%");
 
         return [
             'count' => $query->count(),

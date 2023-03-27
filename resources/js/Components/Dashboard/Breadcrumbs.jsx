@@ -7,16 +7,17 @@ function Breadcrumbs({ href = [] }) {
         if (href?.length) {
             href = [{label: 'Principal', url: route('home')}].concat(href);
             return href.map((item, i) => {
-                if (item.url && ((i + 1) < href.length))
+                if (item.url && ((i + 1) < href.length)) {
                     return (
-                        <span key={i.toString()}>
+                        <span key={i}>
                             <Link href={item.url} className="text-green">
                                 {item.label}
                             </Link>
                             {((i + 1) < href.length) && <span className="text-green">{separator}</span>}
                         </span>
                     )
-                return <span key={i.toString()}>{item.label}</span>
+                }
+                return <span key={i}>{item.label}</span>
             });
         }
 

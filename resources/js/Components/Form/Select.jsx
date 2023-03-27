@@ -7,7 +7,8 @@ function Select({
     className,
     isFocused,
     handleChange,
-    required
+    required,
+    processing
 }) {
     const select = useRef();
 
@@ -30,6 +31,7 @@ function Select({
                 ref={select}
                 onChange={(e) => handleChange(e)}
                 required={required}
+                disabled={processing}
             >
                 {children}
             </select>

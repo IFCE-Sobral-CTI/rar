@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\HomeController as Home;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RuleController;
@@ -23,14 +24,11 @@ use App\Http\Controllers\Admin\FaqController;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('home');
+Route::get('/', [Home::class, 'index'])->name('home');
+Route::post('/matriculas', [Home::class, 'postEnrollments'])->name('home.enrollments.post');
+Route::get('/matriculas/{token}', [Home::class, 'getEnrollments'])->name('home.enrollments.get');
+Route::post('/requerimento', [Home::class, 'postRequirements'])->name('home.requirements.post');
+Route::get('/requerimento/{id}', [Home::class, 'getRequirements'])->name('home.requirements.get');
 
 Route::get('faq', [Home::class, 'faq'])->name('faq');
 
@@ -47,6 +45,10 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
     Route::resource('groups', GroupController::class);
     Route::resource('activities', ActivityController::class)->only(['index', 'show', 'destroy']);
     Route::resource('faqs', FaqController::class);
+
+    Route::resource('students', StudentController::class);
+    Route::resource('courses', CourseController::class);
+    Route::resource('students.enrollments', EnrollmentController::class)->shallow();
 });
 
 require __DIR__.'/auth.php';
