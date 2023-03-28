@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RuleController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\RequirementTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
     Route::resource('students', StudentController::class);
     Route::resource('courses', CourseController::class);
     Route::resource('students.enrollments', EnrollmentController::class)->shallow();
+    Route::resource('requirement/types', RequirementTypeController::class);
 });
 
 require __DIR__.'/auth.php';
