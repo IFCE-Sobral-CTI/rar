@@ -1,8 +1,18 @@
-import 'tw-elements';
+import {
+    Modal,
+    Ripple,
+    initTE,
+} from "tw-elements";
+
 import { useForm } from "@inertiajs/react";
+import { useEffect } from "react";
 
 export default function DeleteModal({ url }) {
     const { delete: destroy, processing } = useForm();
+
+    useEffect(() => {
+        initTE({ Modal, Ripple });
+    });
 
     const submit = (e) => {
         e.preventDefault();
@@ -18,6 +28,7 @@ export default function DeleteModal({ url }) {
                 type="button"
                 data-te-toggle="modal"
                 data-te-target="#delete-modal"
+                data-te-ripple-init
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm tracking-widest text-white transition duration-150 ease-in-out bg-red-500 border border-transparent rounded-md active:bg-red-700 hover:bg-red-600"
             >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-5 h-5" role="img" aria-hidden="true" viewBox="0 0 16 16">
