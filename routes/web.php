@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\RuleController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\RequirementTypeController;
 use App\Http\Controllers\Admin\SemesterController;
+use App\Http\Controllers\Admin\WeekdayController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +54,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
     Route::resource('students.enrollments', EnrollmentController::class)->shallow();
     Route::resource('requirement/types', RequirementTypeController::class);
     Route::resource('semesters', SemesterController::class);
+    Route::resource('weekdays', WeekdayController::class);
 });
 
 require __DIR__.'/auth.php';
