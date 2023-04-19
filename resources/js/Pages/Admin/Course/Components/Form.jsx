@@ -16,7 +16,8 @@ export default function Form({data, errors, handleSubmit, onHandleChange, proces
                 <label htmlFor="name" className="font-light">Nome</label>
                 <Input initialValue={data.name} name={'name'} handleChange={onHandleChange} required={true} placeholder="Nome do curso" className={'w-full'} />
                 <InputError message={errors.name} />
-            </div><div className="mb-4">
+            </div>
+            <div className="mb-4">
                 <label htmlFor="status" className="font-light">Status</label>
                 <Select name={'status'} value={data.status} handleChange={onHandleChange} required={true} className={'w-full'}>
                     <option className="text-gray-500">Selecione uma opção</option>
