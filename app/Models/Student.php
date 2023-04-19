@@ -57,7 +57,10 @@ class Student extends Model
     {
         $query->where('cpf', 'iLIKE', "%{$request->term}%")
             ->orWhere('rg', 'iLIKE', "%{$request->term}%")
-            ->orWhere('name', 'iLIKE', "%{$request->term}%");
+            ->orWhere('name', 'iLIKE', "%{$request->term}%")
+            ->orWhereHas('enrollments', function($query) use ($request) {
+                return $query->where('number', 'iLIKE', "%{$request->term}%");
+            });
 
         return [
             'count' => $query->count(),
