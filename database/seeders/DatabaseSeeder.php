@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             CourseSeeder::class,
             EnrollmentSeeder::class,
             RequirementTypeSeeder::class,
+            SemesterSeeder::class,
         ]);
 
         // User::factory(23)->create();
