@@ -1,11 +1,11 @@
 import InputError from "@/Components/InputError";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-function SelectMulti({ data, onChange, value, error, label }) {
+function SelectMulti({ data, onChange, value, error, label, name }) {
     const [toggle, setToggle] = useState(false);
     const [term, setTerm] = useState('');
     const [list, setList] = useState([]);
-    const [selected, setSelected] = useState({id: null, name: null});
+    const [selected, setSelected] = useState([]);
     const ref = useRef(null);
 
     const inputRef = useCallback((inputElement) => {
@@ -16,12 +16,18 @@ function SelectMulti({ data, onChange, value, error, label }) {
 
     useEffect(() => {
         if (value) {
-            setSelected(data.filter(item => item.id == value).pop());
+            let itemSelected = data.filter(item => value.includes(item.id));
+            setSelected(itemSelected);
         }
     }, []);
 
     useEffect(() => {
-        onChange(selected.id)
+        onChange({
+            target: {
+                name,
+                value: selected.map(item => item.id)
+            }
+        });
 
         const debounce = setTimeout(() => {
             setList(data.filter((item) => {
@@ -38,12 +44,19 @@ function SelectMulti({ data, onChange, value, error, label }) {
     }, [term, selected]);
 
     const handleSelect = (event) => {
-        setSelected(data.filter(item => item.id === event.target.value).pop())
+        let value = list.filter(item => item.id === event.target.value);
+        setSelected([...selected, value.pop()]);
+    }
+
+    const handleUnselect = (value) => {
+        setSelected(selected => selected.filter(item => item.id !== value));
         toggleHandle();
     }
 
     const items = list.map((item, index) => {
-        if (selected?.id !== item.id)
+        let sel = selected.map(item => item.id);
+
+        if (!sel.includes(item.id))
             return (
                 <li className="px-2 py-1 rounded-lg transition cursor-pointer font-light hover:bg-neutral-100" key={index} onClick={handleSelect} value={item.id}>{item.name}</li>
             );
@@ -64,10 +77,21 @@ function SelectMulti({ data, onChange, value, error, label }) {
         <div className="w-full mb-4 relative">
             <label className="font-light">{label}</label>
             <div className="flex border border-neutral-400 rounded-lg p-2" onClick={toggleHandle}>
-                <div className="flex-1">
-                    {selected.id != null
-                    ?<span className="text-neutral-700 font-normal">{selected.name}</span>
-                    :<span className="text-neutral-500">Nenhum {label} selecionado</span>}
+                <div className="flex-1 flex gap-2">
+                    {selected.length > 0
+                    ?selected.map((item, i) => {
+                        return (
+                            <div className="inline-flex justify-between gap-2 items-center text-neutral-700 font-light text-sm bg-neutral-200 rounded-md" key={i}>
+                                <span className="pl-2">{item.name}</span>
+                                <span onClick={() => handleUnselect(item.id)} className="pr-1 border-l border-neutral-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-4 w-4" viewBox="0 0 16 16">
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </span>
+                            </div>
+                        );
+                    })
+                    :<span className="text-neutral-500">Nenhum {label.toLowerCase()} selecionado</span>}
                 </div>
                 <div className="flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">

@@ -16,7 +16,8 @@ function SelectOnly({ data, onChange, error, value, label, name }) {
 
     useEffect(() => {
         if (value) {
-            setSelected(data.filter(item => item.id == value).pop());
+            let itemSelected = data.filter(item => item.id == value);
+            setSelected(itemSelected.pop());
         }
     }, []);
 
