@@ -6,7 +6,9 @@ use App\Traits\CreatedAndUpdatedTz;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -30,6 +32,11 @@ class Weekday extends Model
             ->dontSubmitEmptyLogs();
     }
 
+    public function requirements(): BelongsToMany
+    {
+        return $this->belongsToMany(Requirement::class);
+    }
+
     public function scopeSearch(Builder $query, Request $request): array
     {
         $query->where('description', 'iLIKE', "%{$request->term}%");
@@ -40,5 +47,15 @@ class Weekday extends Model
             'page' => $request->page?? 1,
             'termSearch' => $request->term,
         ];
+    }
+
+    public function scopeGetDataForSelectInput(Builder $query): Collection
+    {
+        return $query->where('status', true)->get()->map(function($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->description,
+            ];
+        });
     }
 }

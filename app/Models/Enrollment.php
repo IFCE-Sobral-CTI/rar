@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -57,5 +58,15 @@ class Enrollment extends Model
             'page' => $request->page?? 1,
             'termSearch' => $request->term,
         ];
+    }
+
+    public function scopeGetDataForSelectInput(Builder $query): Collection
+    {
+        return $query->get()->map(function($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->number . ' - ' . $item->student->name,
+            ];
+        });
     }
 }

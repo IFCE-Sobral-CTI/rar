@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -47,5 +48,15 @@ class Semester extends Model
             'page' => $request->page?? 1,
             'termSearch' => $request->term,
         ];
+    }
+
+    public function scopeGetDataForSelectInput(Builder $query): Collection
+    {
+        return $query->get()->map(function($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->description,
+            ];
+        });
     }
 }
