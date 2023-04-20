@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Dispatch;
 use App\Models\Requirement;
 use App\Models\Weekday;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -18,6 +19,10 @@ class RequirementSeeder extends Seeder
             $requirement->weekdays()->sync(
                 Weekday::where('status', true)->get()
             );
+            $requirement->dispatches()->factory(rand(1, 5))->create();
+            // $requirement->dispatches()->saveMany(
+            //     Dispatch::factory(rand(1, 5))->make(['requirement_id' => null])
+            // );
         });
     }
 }

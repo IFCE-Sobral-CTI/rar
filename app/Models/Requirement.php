@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -57,6 +58,11 @@ class Requirement extends Model
     public function weekdays(): BelongsToMany
     {
         return $this->belongsToMany(Weekday::class);
+    }
+
+    public function dispatches(): HasMany
+    {
+        return $this->hasMany(Dispatch::class);
     }
 
     public function scopeSearch(Builder $query, Request $request): array
