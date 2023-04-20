@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             RequirementTypeSeeder::class,
             SemesterSeeder::class,
             WeekdaySeeder::class,
+            RequirementSeeder::class,
         ]);
 
         // User::factory(23)->create();
