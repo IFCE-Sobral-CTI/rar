@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\RequirementController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\CourseController;
@@ -55,6 +56,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
     Route::resource('requirement/types', RequirementTypeController::class);
     Route::resource('semesters', SemesterController::class);
     Route::resource('weekdays', WeekdayController::class);
+    Route::resource('requirements', RequirementController::class);
 });
 
 require __DIR__.'/auth.php';
