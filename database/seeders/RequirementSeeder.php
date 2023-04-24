@@ -19,10 +19,9 @@ class RequirementSeeder extends Seeder
             $requirement->weekdays()->sync(
                 Weekday::where('status', true)->get()
             );
-            $requirement->dispatches()->factory(rand(1, 5))->create();
-            // $requirement->dispatches()->saveMany(
-            //     Dispatch::factory(rand(1, 5))->make(['requirement_id' => null])
-            // );
+            $requirement->dispatches()->saveMany(
+                Dispatch::factory(rand(1, 5))->make(['requirement_id' => null])
+            );
         });
     }
 }
