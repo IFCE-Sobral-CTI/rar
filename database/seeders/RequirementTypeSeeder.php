@@ -13,6 +13,10 @@ class RequirementTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        RequirementType::factory(26)->create();
+        RequirementType::insert([
+            ['description' => 'Primeira via', 'status' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['description' => 'Segunda via', 'status' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['description' => 'Renovação', 'status' => true, 'created_at' => now(), 'updated_at' => now()],
+        ]);
     }
 }
