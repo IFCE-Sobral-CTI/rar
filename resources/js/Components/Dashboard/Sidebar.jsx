@@ -25,8 +25,13 @@ function Sidebar({ can }) {
         route().current('semesters.*')
     );
 
+    const [printQueueCollapse] = useState(
+        route().current('print_queues.*')
+    );
+
     const [chevronAccess, setChevronAccess] = useState(accessCollapse);
     const [chevronRequirement, setChevronRequirement] = useState(requirementsCollapse);
+    const [chevronPrintQueue, setChevronPrintQueue] = useState(printQueueCollapse);
 
     const toggleChevronAccess = () => {
         setChevronAccess(!chevronAccess);
@@ -34,6 +39,10 @@ function Sidebar({ can }) {
 
     const toggleChevronRequirement = () => {
         setChevronRequirement(!chevronRequirement);
+    }
+
+    const toggleChevronPrintQueue = () => {
+        setChevronPrintQueue(!chevronPrintQueue);
     }
 
     useEffect(() => {
@@ -78,6 +87,7 @@ function Sidebar({ can }) {
                         </svg>
                         Cursos
                     </Link>}
+
                     {(can.requirements_viewAny || can.types_viewAny || can.weekdays_viewAny || can.semesters_viewAny) && <>
                         <button
                             className={
@@ -113,7 +123,7 @@ function Sidebar({ can }) {
                             </span>
                         </button>
                         <div
-                            className={'flex flex-col gap-1 pl-2 transition !visible ' + (chevronRequirement? '': 'hidden')}
+                            className={'flex flex-col gap-1 pl-2 transition bg-neutral-200 rounded-md p-2 shadow-md !visible ' + (chevronRequirement? '': 'hidden')}
                             data-te-collapse-item
                             id="requirementCollapse"
                         >
@@ -159,6 +169,70 @@ function Sidebar({ can }) {
                             </Link>}
                         </div>
                     </>}
+
+
+                    {(can.print_queues_viewAny) && <>
+                        <button
+                            className={
+                                (
+                                    printQueueCollapse
+                                    ? 'bg-gray-50 shadow-md '
+                                    : ''
+                                ) + `text-gray-600 p-3 rounded-lg hover:bg-white hover:shadow-md transition flex items-center gap-4 focus:ring-0`}
+                            type="button"
+                            data-te-collapse-init
+                            data-te-target="#printQueueCollapse"
+                            aria-controls="printQueueCollapse"
+                            aria-expanded="false"
+                            onClick={toggleChevronPrintQueue}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+                                <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                                <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                            </svg>
+                            Impressões
+                            <span className={"flex-1 flex justify-end "}>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    fill="currentColor"
+                                    className={"h-5 w-5 transition " + (!chevronPrintQueue? ' -rotate-90': '')}
+                                    viewBox="0 0 16 16"
+                                >
+                                    <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div
+                            className={'flex flex-col gap-1  transition bg-neutral-200 rounded-md p-2 shadow-md !visible ' + (chevronPrintQueue? '': 'hidden')}
+                            data-te-collapse-item
+                            id="printQueueCollapse"
+                        >
+                            {can.print_queues_viewAny && <Link
+                                href={route('print_queues.index', {term: '', page: 1})}
+                                className={(route().current('print_queues.*')? 'bg-gray-50 shadow-md ': '') + `text-gray-600 p-3 rounded-lg hover:bg-white hover:shadow-md transition flex gap-4`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+                                    <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z"/>
+                                </svg>
+                                Fila de impressão
+                            </Link>}
+                            {can.print_queues_viewAny && <Link
+                                href={route('print_queues.index', {term: '', page: 1})}
+                                className={(route().current('print_queues.*')? 'bg-gray-50 shadow-md ': '') + `text-gray-600 p-3 rounded-lg hover:bg-white hover:shadow-md transition flex gap-4`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+                                    <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"/>
+                                    <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+                                    <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+                                </svg>
+                                Relatórios
+                            </Link>}
+                        </div>
+                    </>}
+
+
                     {(can.users_viewAny || can.permissions_viewAny || can.rules_viewAny || can.groups_viewAny || can.activities_viewAny) && <>
                         <button
                             className={
@@ -193,7 +267,7 @@ function Sidebar({ can }) {
                             </span>
                         </button>
                         <div
-                            className={'flex flex-col gap-1 pl-2 transition !visible ' + (chevronAccess? '': 'hidden')}
+                            className={'flex flex-col gap-1 pl-2 transition bg-neutral-200 rounded-md p-2 shadow-md !visible ' + (chevronAccess? '': 'hidden')}
                             data-te-collapse-item
                             id="accessCollapse"
                         >
