@@ -1,14 +1,15 @@
 <?php
 
+use App\Http\Controllers\HomeController as Home;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RequirementController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\DispatchController;
 use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\HomeController;
-use App\Http\Controllers\HomeController as Home;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RuleController;
@@ -57,6 +58,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
     Route::resource('semesters', SemesterController::class);
     Route::resource('weekdays', WeekdayController::class);
     Route::resource('requirements', RequirementController::class);
+    Route::resource('requirements.dispatches', DispatchController::class);
 });
 
 require __DIR__.'/auth.php';

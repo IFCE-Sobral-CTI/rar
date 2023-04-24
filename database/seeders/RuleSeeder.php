@@ -20,6 +20,7 @@ class RuleSeeder extends Seeder
          * @var array $groups
          */
         $groups = [
+            'dispatches' => ['group' => Group::firstOrCreate(['description' => 'Despachos'])],
             'requirements' => ['group' => Group::firstOrCreate(['description' => 'Requerimento'])],
             'weekdays' => ['group' => Group::firstOrCreate(['description' => 'Dias da Semana'])],
             'semesters' => ['group' => Group::firstOrCreate(['description' => 'Semestres'])],
