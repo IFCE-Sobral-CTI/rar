@@ -54,7 +54,12 @@ function Index({ requirements, count, page, termSearch, can }) {
 
     return (
         <>
-            <AuthenticatedLayout titleChildren={'Gerenciamento de Requerimentos'} breadcrumbs={[{ label: 'Requerimentos', url: route('requirements.index') }]}>
+            <AuthenticatedLayout
+                titleChildren={'Gerenciamento de Requerimentos'}
+                breadcrumbs={[
+                    { label: 'Requerimentos', url: route('requirements.index') }
+                ]}
+            >
                 <div className="flex gap-2 md:flex-row md:gap-4">
                     {can.create && <Panel className={'inline-flex'}>
                         <Link href={route('requirements.create')} className="inline-flex items-center justify-between gap-2 px-3 py-2 font-light text-white transition bg-blue-500 border border-transparent rounded-md focus:ring hover:bg-blue-600 focus:ring-sky-300">
