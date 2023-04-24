@@ -84,13 +84,14 @@ class RequirementController extends Controller
     {
         $this->authorize('requirements.show', $requirement);
 
-        $requirement = Requirement::with(['enrollment' => ['student'], 'weekdays', 'semester', 'requirementType'])->find($requirement->id);
+        $requirement = Requirement::with(['enrollment' => ['student', 'course'], 'weekdays', 'semester', 'requirementType'])->find($requirement->id);
 
         return Inertia::render('Admin/Requirement/Show', [
             'requirement' => $requirement,
             'can' => [
                 'delete' => Auth::user()->can('requirements.delete'),
                 'update' => Auth::user()->can('requirements.update'),
+                'dispatches' => Auth::user()->can('dispatches.index'),
             ]
         ]);
     }
