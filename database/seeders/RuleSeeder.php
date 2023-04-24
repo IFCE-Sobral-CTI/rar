@@ -20,6 +20,10 @@ class RuleSeeder extends Seeder
          * @var array $groups
          */
         $groups = [
+            'print_queues' => [
+                'group' => Group::firstOrCreate(['description' => 'Fila de Impressão']),
+                'only' => ['Página inicial' => 'viewAny', 'Detalhes' => 'view', 'Apagar' => 'delete'],
+            ],
             'dispatches' => ['group' => Group::firstOrCreate(['description' => 'Despachos'])],
             'requirements' => ['group' => Group::firstOrCreate(['description' => 'Requerimento'])],
             'weekdays' => ['group' => Group::firstOrCreate(['description' => 'Dias da Semana'])],

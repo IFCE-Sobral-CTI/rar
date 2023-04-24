@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RuleController;
 use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\PrintQueueController;
 use App\Http\Controllers\Admin\RequirementTypeController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\WeekdayController;
@@ -59,6 +60,9 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
     Route::resource('weekdays', WeekdayController::class);
     Route::resource('requirements', RequirementController::class);
     Route::resource('requirements.dispatches', DispatchController::class);
+    Route::resource('print/queues', PrintQueueController::class)
+        ->only(['index', 'show', 'destroy'])
+        ->names('print_queues');
 });
 
 require __DIR__.'/auth.php';
