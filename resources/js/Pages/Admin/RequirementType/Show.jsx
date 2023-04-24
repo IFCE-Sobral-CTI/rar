@@ -31,7 +31,7 @@ function Show({ type, can }) {
                 ]}
             >
                 <Panel className={'flex flex-col gap-4'}>
-                    <ShowField label={'Description'} value={type.description} />
+                    <ShowField label={'Descrição'} value={type.description} />
                     <ShowField label={'Nome'} value={status(type.status)} />
                     <ShowField label={'Criado em'} value={type.created_at} />
                     <ShowField label={'Atualizado em'} value={type.updated_at} />
