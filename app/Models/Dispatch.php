@@ -63,4 +63,9 @@ class Dispatch extends Model
             'termSearch' => $request->term,
         ];
     }
+
+    public function scopeGetIdRequirements(Builder $query, array $dispatches): array
+    {
+        return $query->whereIn('id', $dispatches)->get()->unique('requirement_id')->pluck('requirement_id')->toArray();
+    }
 }
