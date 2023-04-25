@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePrintQueueRequest;
-use App\Http\Requests\UpdatePrintQueueRequest;
+use App\Models\Dispatch;
 use App\Models\PrintQueue;
+use App\Models\Report;
+use App\Models\Requirement;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -107,5 +108,24 @@ class PrintQueueController extends Controller
         }
 
         return to_route('print_queues.index')->with('flash', ['status' => 'success', 'message' => 'Registro apagado com sucesso.']);
+    }
+
+    public function send(Request $request): RedirectResponse
+    {
+        $this->authorize('print_queues.send', PrintQueue::class);
+
+        try {
+            $report = $request->user()->reports()->create();
+            $report->requirements()->sync(
+                Dispatch::getIdRequirements(
+                    PrintQueue::all()->pluck('dispatch_id')->toArray()
+                )
+            );
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return to_route('print_queues.index')->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
+        }
+
+        return to_route('print_queues.index')->with('flash', ['status' => 'success', 'message' => 'Registro enviados para impressão com sucesso.']);
     }
 }
