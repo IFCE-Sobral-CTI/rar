@@ -65,6 +65,11 @@ class Requirement extends Model
         return $this->hasMany(Dispatch::class);
     }
 
+    public function reports(): BelongsToMany
+    {
+        return $this->belongsToMany(Report::class);
+    }
+
     public function scopeSearch(Builder $query, Request $request): array
     {
         $query->with(['enrollment' => ['student'], 'semester', 'requirementType', 'weekdays'])->where(function($query) use ($request) {
@@ -89,6 +94,16 @@ class Requirement extends Model
             'requirements' => $query->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10))->appends(['term' => $request->term]),
             'page' => $request->page?? 1,
             'termSearch' => $request->term,
+        ];
+    }
+
+    public function scopeGetDataForReport(Builder $query, Report $report): array
+    {
+        $requirement = $report->requirements()->with(['enrollment' => ['student'], 'semester', 'requirementType', 'weekdays']);
+
+        return [
+            'count' => $requirement->count(),
+            'requirements' => $requirement->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10)),
         ];
     }
 }
