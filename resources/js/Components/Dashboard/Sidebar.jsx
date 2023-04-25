@@ -26,7 +26,8 @@ function Sidebar({ can }) {
     );
 
     const [printQueueCollapse] = useState(
-        route().current('print_queues.*')
+        route().current('print_queues.*') ||
+        route().current('reports.*')
     );
 
     const [chevronAccess, setChevronAccess] = useState(accessCollapse);
@@ -171,7 +172,7 @@ function Sidebar({ can }) {
                     </>}
 
 
-                    {(can.print_queues_viewAny) && <>
+                    {(can.print_queues_viewAny || reports_viewAny) && <>
                         <button
                             className={
                                 (
@@ -218,9 +219,9 @@ function Sidebar({ can }) {
                                 </svg>
                                 Fila de impressão
                             </Link>}
-                            {can.print_queues_viewAny && <Link
-                                href={route('print_queues.index', {term: '', page: 1})}
-                                className={(route().current('print_queues.*')? 'bg-gray-50 shadow-md ': '') + `text-gray-600 p-3 rounded-lg hover:bg-white hover:shadow-md transition flex gap-4`}
+                            {can.reports_viewAny && <Link
+                                href={route('reports.index', {term: '', page: 1})}
+                                className={(route().current('reports.*')? 'bg-gray-50 shadow-md ': '') + `text-gray-600 p-3 rounded-lg hover:bg-white hover:shadow-md transition flex gap-4`}
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
                                     <path d="M4 11a1 1 0 1 1 2 0v1a1 1 0 1 1-2 0v-1zm6-4a1 1 0 1 1 2 0v5a1 1 0 1 1-2 0V7zM7 9a1 1 0 0 1 2 0v3a1 1 0 1 1-2 0V9z"/>

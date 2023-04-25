@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             WeekdaySeeder::class,
             RequirementSeeder::class,
             PrintQueueSeeder::class,
+            ReportSeeder::class,
         ]);
 
         // User::factory(23)->create();

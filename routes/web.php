@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RuleController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\PrintQueueController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RequirementTypeController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\WeekdayController;
@@ -64,6 +65,9 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
         ->only(['index', 'show', 'destroy'])
         ->names('print_queues');
     Route::post('print/queues/send/report', [PrintQueueController::class, 'send'])->name('print_queues.send');
+
+    Route::resource('print/reports', ReportController::class)
+        ->only(['index', 'show', 'destroy']);
 });
 
 require __DIR__.'/auth.php';
