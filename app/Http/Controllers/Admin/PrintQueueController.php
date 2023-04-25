@@ -48,7 +48,7 @@ class PrintQueueController extends Controller
      *
      * @throws AuthorizationException
      */
-    public function store(StorePrintQueueRequest $request): void
+    public function store(Request $request): void
     {
         //
     }
@@ -85,7 +85,7 @@ class PrintQueueController extends Controller
      *
      * @throws AuthorizationException
      */
-    public function update(UpdatePrintQueueRequest $request, PrintQueue $print_queue): void
+    public function update(Request $request, PrintQueue $print_queue): void
     {
         //
     }
