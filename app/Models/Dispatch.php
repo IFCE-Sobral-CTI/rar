@@ -15,6 +15,10 @@ class Dispatch extends Model
 {
     use HasFactory, CreatedAndUpdatedTz, LogsActivity;
 
+    public const TO_ANALYZE = 1;
+    public const DEFERRED = 2;
+    public const REJECTED = 3;
+
     protected $fillable = [
         'status',
         'text',
