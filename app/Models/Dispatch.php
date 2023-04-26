@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -57,6 +58,11 @@ class Dispatch extends Model
         return $this->belongsToMany(Report::class);
     }
 
+    public function printQueues(): HasMany
+    {
+        return $this->hasMany(PrintQueue::class);
+    }
+
     public function scopeSearch(Builder $query, Requirement $requirement, Request $request): array
     {
         $query->with(['user'])
@@ -85,7 +91,7 @@ class Dispatch extends Model
 
         return [
             'count' => $dispatch->count(),
-            'dispatches' => $dispatch->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10)),
+            'dispatches' => $dispatch->orderBy('status', 'ASC')->paginate(8),
         ];
     }
 }
