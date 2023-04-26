@@ -17,7 +17,8 @@ class Report extends Model
     use HasFactory, CreatedAndUpdatedTz, LogsActivity;
 
     protected $fillable = [
-        'user_id'
+        'user_id',
+        'printed'
     ];
 
     public function dispatches(): BelongsToMany
@@ -35,6 +36,7 @@ class Report extends Model
         return LogOptions::defaults()
             ->logOnly([
                 'user.name',
+                'printed'
             ])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();

@@ -19,6 +19,7 @@ class ReportFactory extends Factory
     {
         return [
             'user_id' => User::all()->random()->id,
+            'printed' => !rand(0, 1),
         ];
     }
 }
