@@ -6,8 +6,8 @@ import {
 import { useForm } from "@inertiajs/react";
 import { useEffect } from "react";
 
-export default function Confirmation({ url, message }) {
-    const { post, processing } = useForm();
+export default function Confirmation({ url, message, textButton, iconButton, values, method }) {
+    const { post, put, get, delete: destroy, processing } = useForm({...values});
 
     useEffect(() => {
         initTE({ Modal });
@@ -15,9 +15,25 @@ export default function Confirmation({ url, message }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(url, {
-            preserveScroll: true
-        });
+        switch(method) {
+            case 'post':
+                post(url, {
+                    preserveScroll: true
+                });
+                break;
+            case 'put':
+                put(url, {
+                    preserveScroll: true
+                });
+                break;
+            case 'delete':
+                destroy(url, {
+                    preserveScroll: true
+                });
+                break;
+            default:
+                get(url);
+        }
     }
 
     return (
@@ -28,11 +44,14 @@ export default function Confirmation({ url, message }) {
                 data-te-target="#confirmation-modal"
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm tracking-widest text-white transition duration-150 ease-in-out bg-sky-500 border border-transparent rounded-md active:bg-sky-700 hover:bg-sky-600"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
-                    <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-                    <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
+                {iconButton??
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" className="h-5 w-5">
+                    <g fill="currentColor">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25c.09-.656.54-1.134 1.342-1.134c.686 0 1.314.343 1.314 1.168c0 .635-.374.927-.965 1.371c-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486c.609-.463 1.244-.977 1.244-2.056c0-1.511-1.276-2.241-2.673-2.241c-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927c.609 0 1.028-.394 1.028-.927c0-.552-.42-.94-1.029-.94c-.584 0-1.009.388-1.009.94z"/>
+                    </g>
                 </svg>
-                <span>Enviar para impressão</span>
+                }
+                <span>{textButton?? 'Confirmação'}</span>
             </button>
             <div
                 data-te-modal-init
