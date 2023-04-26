@@ -101,6 +101,12 @@ class PrintQueueController extends Controller
         $this->authorize('print_queues.delete', $queue);
 
         try {
+            Dispatch::create([
+                'status' => Dispatch::REJECTED,
+                'text' => 'Removido da fila de impressão.',
+                'requirement_id' => $queue->dispatch->requirement->id,
+                'user_id' => Auth::user()->id,
+            ]);
             $queue->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -114,13 +120,16 @@ class PrintQueueController extends Controller
     {
         $this->authorize('print_queues.send', PrintQueue::class);
 
+        if (!PrintQueue::count())
+            return to_route('print_queues.index')->with('flash', ['status' => 'warning', 'message' => 'Nenhum registro para imprimir.']);
+
         try {
             $report = $request->user()->reports()->create();
-            $report->requirements()->sync(
-                Dispatch::getIdRequirements(
-                    PrintQueue::all()->pluck('dispatch_id')->toArray()
-                )
+            $report->dispatches()->sync(
+                PrintQueue::all()->unique('dispatch_id')->pluck('dispatch_id')->toArray()
             );
+            // Remove todos da fila de impressão
+            PrintQueue::truncate();
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return to_route('print_queues.index')->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
