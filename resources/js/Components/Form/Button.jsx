@@ -21,6 +21,8 @@ function Button({ children, type = 'button', processing, className, onClick, col
                 return 'bg-violet-500 hover:bg-violet-600 focus:ring-violet-300 ';
             case 'sky':
                 return 'bg-sky-500 hover:bg-sky-600 focus:ring-sky-300 ';
+            case 'teal':
+                return 'bg-teal-500 hover:bg-teal-600 focus:ring-teal-300 ';
             case 'yellow':
                 return 'bg-yellow-500 hover:bg-yellow-600 focus:ring-yellow-300 ';
             case 'red':
