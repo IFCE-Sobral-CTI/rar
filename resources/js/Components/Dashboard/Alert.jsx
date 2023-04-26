@@ -17,21 +17,25 @@ function Alert() {
     }, [alert]);
 
     switch (type) {
+        case 'green':
         case 'success':
             textColor = "text-white";
             bgColor = "bg-green";
             borderColor = "border-white";
             break;
+        case 'red':
         case 'danger':
             textColor = "text-white";
             bgColor = "bg-red-500";
             borderColor = "border-white";
             break;
+        case 'yellow':
         case 'warning':
             textColor = "text-white";
             bgColor = "bg-yellow-500";
             borderColor = "border-white";
             break;
+        case 'blue':
         case 'info':
             textColor = "text-white";
             bgColor = "bg-sky-500";
