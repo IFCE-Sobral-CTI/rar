@@ -1,4 +1,3 @@
-import { usePage } from '@inertiajs/react';
 import React, { useEffect, useState } from 'react';
 import { useIMask } from 'react-imask';
 
@@ -18,9 +17,9 @@ export default function Input({
     const [ opts, setOpts ] = useState({ mask: mask });
     const {
         ref,
+        maskRef,
         value,
         setValue,
-        maskRef,
         unmaskedValue,
         setUnmaskedValue,
         typedValue,
