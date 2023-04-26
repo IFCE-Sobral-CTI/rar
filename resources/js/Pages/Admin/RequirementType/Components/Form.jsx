@@ -3,6 +3,7 @@ import Input from "@/Components/Form/Input";
 import InputError from "@/Components/InputError";
 import Button from "@/Components/Form/Button";
 import Select from "@/Components/Form/Select";
+import SelectOnly from "@/Components/Form/SelectOnly";
 
 export default function Form({data, errors, handleSubmit, onHandleChange, processing }) {
     return (
@@ -12,15 +13,30 @@ export default function Form({data, errors, handleSubmit, onHandleChange, proces
                 <Input initialValue={data.description} name={'description'} handleChange={onHandleChange} required={true} placeholder="Descrição do tipo de requerimento" className={'w-full'} isFocused={true} />
                 <InputError message={errors.description} />
             </div>
-            <div className="mb-4">
-                <label htmlFor="status" className="font-light">Status</label>
-                <Select name={'status'} value={data.status} handleChange={onHandleChange} required={true} className={'w-full'}>
-                    <option className="text-gray-500">Selecione uma opção</option>
-                    <option value={1}>Ativo</option>
-                    <option value={0}>Inativo</option>
-                </Select>
-                <InputError message={errors.status} />
-            </div>
+            <SelectOnly
+                value={data.status}
+                data={[
+                    {id: 0, name: 'Inativo'},
+                    {id: 1, name: 'Ativo'},
+                ]}
+                onChange={onHandleChange}
+                error={errors.status}
+                label={'Situação'}
+                name={'status'}
+                required
+            />
+            <SelectOnly
+                value={data.printable}
+                data={[
+                    {id: 0, name: 'Não'},
+                    {id: 1, name: 'Sim'},
+                ]}
+                onChange={onHandleChange}
+                error={errors.printable}
+                label={'Imprimível'}
+                name={'printable'}
+                required
+            />
             <div className="flex items-center justify-center gap-4 mt-6">
                 <Button type={'submit'} processing={processing} color={'green'} className={"gap-2"}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-5 h-5" viewBox="0 0 16 16">

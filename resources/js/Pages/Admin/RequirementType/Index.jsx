@@ -30,12 +30,30 @@ function Index({ requirementTypes, count, page, termSearch, can }) {
         )
     }
 
+    const printable = (status) => {
+        let className = 'py-1 px-2 rounded-md text-sm text-white';
+        if (status) {
+            className += ' bg-green-500';
+        } else {
+            className += ' bg-red-500';
+        }
+
+        return (
+            <span className={className}>{status == '1' ? 'Sim' : 'Não'}</span>
+        )
+    }
+
     const table = requirementTypes.data.map((item, index) => {
         return (
             <tr key={index} className={"border-t transition hover:bg-neutral-100 " + (index % 2 == 0? 'bg-neutral-50': '')}>
                 <td className="px-1 py-3 font-light">
                     <Link href={can.view? route('types.show', item.id): route('types.index', {term: term, page: currentPage})}>
                         {item.description}
+                    </Link>
+                </td>
+                <td className="px-1 py-3 font-light">
+                    <Link href={can.view? route('types.show', item.id): route('types.index', {term: term, page: currentPage})}>
+                        {printable(item.printable)}
                     </Link>
                 </td>
                 <td className="px-1 py-3 font-light">
@@ -83,7 +101,8 @@ function Index({ requirementTypes, count, page, termSearch, can }) {
                         <thead>
                             <tr className="border-b">
                                 <th className="px-1 pt-3 font-semibold text-left w-10/12">Descrição</th>
-                                <th className="px-1 pt-3 font-semibold text-left w-1/12">Status</th>
+                                <th className="px-1 pt-3 font-semibold text-left w-1/12">Imprimível</th>
+                                <th className="px-1 pt-3 font-semibold text-left w-1/12">Situação</th>
                                 <th className="w-1/12"></th>
                             </tr>
                         </thead>

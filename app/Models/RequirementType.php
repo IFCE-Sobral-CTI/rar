@@ -17,7 +17,8 @@ class RequirementType extends Model
 
     protected $fillable = [
         'description',
-        'status'
+        'status',
+        'printable',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -25,7 +26,8 @@ class RequirementType extends Model
         return LogOptions::defaults()
             ->logOnly([
                 'description',
-                'status'
+                'status',
+                'printable',
             ])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();

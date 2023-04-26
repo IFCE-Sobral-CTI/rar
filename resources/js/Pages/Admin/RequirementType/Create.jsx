@@ -8,6 +8,7 @@ function Create() {
     const { data, setData, post, processing, errors } = useForm({
         description: '',
         status: '',
+        printable: '',
     });
 
     const onHandleChange = (event) => {

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('description');
             $table->boolean('status')->default(false);
+            $table->boolean('printable')->default(false);
             $table->timestamps();
         });
     }

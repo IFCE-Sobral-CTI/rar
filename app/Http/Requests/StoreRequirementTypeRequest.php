@@ -24,6 +24,7 @@ class StoreRequirementTypeRequest extends FormRequest
         return [
             'description' => 'required|unique:requirement_types,description',
             'status' => 'required|boolean',
+            'printable' => 'required|boolean',
         ];
     }
 }

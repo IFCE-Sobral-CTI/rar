@@ -9,6 +9,7 @@ function Edit({ type }) {
     const { data, setData, put, processing, errors } = useForm({
         description: type.description,
         status: type.status? 1: 0,
+        printable: type.printable? 1: 0,
     });
 
     const onHandleChange = (event) => {
