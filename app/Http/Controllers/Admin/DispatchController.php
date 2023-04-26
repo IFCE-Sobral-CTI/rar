@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDispatchRequest;
 use App\Http\Requests\UpdateDispatchRequest;
 use App\Models\Dispatch;
+use App\Models\PrintQueue;
 use App\Models\Requirement;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -67,7 +68,11 @@ class DispatchController extends Controller
             $data = $request->validated();
             $data['user_id'] = $request->user()->id;
             $dispatch = $requirement->dispatches()->create($data);
+            // Atualiza o status do Requerimento
             $requirement->update(['status' => $request->status]);
+            // Adiciona o requerimento a fila de impressão
+            if ($request->status === Dispatch::DEFERRED && $dispatch->requirement->requirementType->printable)
+                $dispatch->printQueues()->create();
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return to_route('requirements.dispatches.create', $requirement)->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
