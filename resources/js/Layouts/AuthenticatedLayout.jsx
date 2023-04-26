@@ -12,8 +12,8 @@ import Navbar from "@/Components/Dashboard/Navbar";
 export default function AuthenticatedLayout({breadcrumbs, children, titleChildren}) {
     const { title, flash, auth, authorizations } = usePage().props;
     const [alert, setAlert] = useState(false);
-    const [message, setMessage] = useState(flash?.flash?.message);
-    const [type, setType] = useState(flash?.flash?.status);
+    const [message, setMessage] = useState();
+    const [type, setType] = useState();
     const { post } = useForm();
 
     const onHandleLogout = () => {
@@ -21,8 +21,11 @@ export default function AuthenticatedLayout({breadcrumbs, children, titleChildre
     }
 
     useEffect(() => {
-        if (flash?.flash)
+        if (flash?.flash) {
             setAlert(true);
+            setMessage(flash.flash.message);
+            setType(flash.flash.status);
+        }
     }, [flash]);
 
     return (
