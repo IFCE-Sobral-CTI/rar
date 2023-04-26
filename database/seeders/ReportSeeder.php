@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Dispatch;
 use App\Models\Report;
-use App\Models\Requirement;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,8 +15,8 @@ class ReportSeeder extends Seeder
     public function run(): void
     {
         Report::factory(4)->create()->each(function($report) {
-            $report->requirements()->sync(
-                Requirement::where('status', 2)->get()->random(4)
+            $report->dispatches()->sync(
+                Dispatch::where('status', 2)->get()->random(4)
             );
         });
     }

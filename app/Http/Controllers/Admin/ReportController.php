@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreReportRequest;
-use App\Http\Requests\UpdateReportRequest;
 use App\Models\Dispatch;
 use App\Models\PrintQueue;
 use App\Models\Report;
-use App\Models\Requirement;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,22 +30,6 @@ class ReportController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreReportRequest $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Report $report): Response
@@ -57,28 +38,12 @@ class ReportController extends Controller
 
         return Inertia::render('Admin/Report/Show', [
             'report' => Report::getDataForShow($report),
-            'requirements' => Requirement::getDataForReport($report),
+            'dispatches' => Dispatch::getDataForReport($report),
             'can' => [
                 'delete' => Auth::user()->can('reports.delete'),
-                'requirement_view' => Auth::user()->can('requirements.view'),
+                'dispatch_view' => Auth::user()->can('dispatches.view'),
             ]
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Report $report)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateReportRequest $request, Report $report)
-    {
-        //
     }
 
     /**
@@ -90,14 +55,12 @@ class ReportController extends Controller
 
         try {
             // Volta os registro para a fila de impressão
-            foreach($report->requirements as $requirement) {
-                $dispatch = $requirement->dispatches()->where('status', Dispatch::DEFERRED)->orderBy('id', 'DESC');
-                if ($dispatch->count()) {
-                    PrintQueue::create([
-                        'dispatch_id' => $dispatch->first()->id
-                    ]);
-                }
+            foreach($report->dispatches as $dispatch) {
+                PrintQueue::create([
+                    'dispatch_id' => $dispatch->id
+                ]);
             }
+            
             $report->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());

@@ -32,7 +32,7 @@ function Index({ reports, count, page, termSearch, can }) {
                 </td>
                 <td className="px-1 py-3 font-light">
                     <Link href={can.view? route('reports.show', item.id): route('reports.index', {term: term, page: currentPage})}>
-                        {item.requirements.length}
+                        {item.dispatches.length}
                     </Link>
                 </td>
                 <td className="flex justify-end py-3 pr-2 text-neutral-400">

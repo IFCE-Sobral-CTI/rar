@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -51,6 +52,11 @@ class Dispatch extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function reports(): BelongsToMany
+    {
+        return $this->belongsToMany(Report::class);
+    }
+
     public function scopeSearch(Builder $query, Requirement $requirement, Request $request): array
     {
         $query->with(['user'])
@@ -71,5 +77,15 @@ class Dispatch extends Model
     public function scopeGetIdRequirements(Builder $query, array $dispatches): array
     {
         return $query->whereIn('id', $dispatches)->get()->unique('requirement_id')->pluck('requirement_id')->toArray();
+    }
+
+    public function scopeGetDataForReport(Builder $query, Report $report): array
+    {
+        $dispatch = $report->dispatches()->with(['requirement' => ['enrollment' => ['student'], 'semester', 'requirementType', 'weekdays']]);
+
+        return [
+            'count' => $dispatch->count(),
+            'dispatches' => $dispatch->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10)),
+        ];
     }
 }

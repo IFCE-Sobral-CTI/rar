@@ -20,9 +20,9 @@ class Report extends Model
         'user_id'
     ];
 
-    public function requirements(): BelongsToMany
+    public function dispatches(): BelongsToMany
     {
-        return $this->belongsToMany(Requirement::class);
+        return $this->belongsToMany(Dispatch::class);
     }
 
     public function user(): BelongsTo
@@ -42,13 +42,15 @@ class Report extends Model
 
     public function scopeSearch(Builder $query, Request $request): array
     {
-        $query->with(['requirements' => ['enrollment' => ['student', 'course'], 'requirementType'], 'user'])
-            ->whereHas('requirements', function($query) use ($request) {
-                return $query->whereHas('enrollment', function($query) use ($request) {
-                    return $query->where(function($query) use ($request) {
-                        return $query->orWhereHas('student', function($query) use ($request) {
-                            return $query->where('name', 'iLIKE', "%$request->term%");
-                        })->orWhere('number', 'iLIKE', "%$request->term%");
+        $query->with(['dispatches' => ['requirement' => ['enrollment' => ['student', 'course'], 'requirementType']], 'user'])
+            ->whereHas('dispatches', function($query) use ($request) {
+                return $query->whereHas('requirement', function($query) use ($request) {
+                    return $query->whereHas('enrollment', function($query) use ($request) {
+                        return $query->where(function($query) use ($request) {
+                            return $query->orWhereHas('student', function($query) use ($request) {
+                                return $query->where('name', 'iLIKE', "%$request->term%");
+                            })->orWhere('number', 'iLIKE', "%$request->term%");
+                        });
                     });
                 });
             });
@@ -64,10 +66,12 @@ class Report extends Model
     public function scopeGetDataForShow(Builder $query, Report $report): Report
     {
         return $query->with([
-            'requirements' =>
-            [
-                'enrollment' => ['student', 'course'],
-                'requirementType'
+            'dispatches' => [
+                'requirement' =>
+                [
+                    'enrollment' => ['student', 'course'],
+                    'requirementType'
+                ],
             ],
             'user'
         ])->findOrFail($report->id);
