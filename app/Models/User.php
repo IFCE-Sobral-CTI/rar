@@ -130,4 +130,9 @@ class User extends Authenticatable
             'termSearch' => $request->term,
         ];
     }
+
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class);
+    }
 }
