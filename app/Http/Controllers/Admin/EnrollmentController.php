@@ -25,7 +25,7 @@ class EnrollmentController extends Controller
      */
     public function index(Student $student, Request $request): Response
     {
-        $this->authorize('enrollments.showAny', Enrollment::class);
+        $this->authorize('enrollments.viewAny', Enrollment::class);
 
         return Inertia::render('Admin/Enrollment/Index', array_merge(Enrollment::search($student, $request), [
             'can' => [
@@ -77,7 +77,7 @@ class EnrollmentController extends Controller
      */
     public function show(Enrollment $enrollment): Response
     {
-        $this->authorize('enrollments.show', $enrollment);
+        $this->authorize('enrollments.view', $enrollment);
 
         return Inertia::render('Admin/Enrollment/Show', [
             'enrollment' => Enrollment::with(['course', 'student'])->find($enrollment->id),

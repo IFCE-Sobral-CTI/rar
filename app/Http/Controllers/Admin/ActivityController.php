@@ -22,7 +22,7 @@ class ActivityController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize('activities.showAny', Activity::class);
+        $this->authorize('activities.viewAny', Activity::class);
 
         return Inertia::render('Auth/Activity/Index', array_merge(ModelsActivity::search($request), [
             'can' => [

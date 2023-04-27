@@ -23,7 +23,7 @@ class RequirementTypeController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize('types.showAny', RequirementType::class);
+        $this->authorize('types.viewAny', RequirementType::class);
 
         return Inertia::render('Admin/RequirementType/Index', array_merge(RequirementType::search($request), [
             'can' => [
@@ -71,7 +71,7 @@ class RequirementTypeController extends Controller
      */
     public function show(RequirementType $type): Response
     {
-        $this->authorize('types.show', $type);
+        $this->authorize('types.view', $type);
 
         return Inertia::render('Admin/RequirementType/Show', [
             'type' => $type,

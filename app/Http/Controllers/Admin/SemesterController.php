@@ -24,7 +24,7 @@ class SemesterController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize('semesters.showAny', Semester::class);
+        $this->authorize('semesters.viewAny', Semester::class);
 
         return Inertia::render('Admin/Semester/Index', array_merge(Semester::search($request), [
             'can' => [
@@ -72,7 +72,7 @@ class SemesterController extends Controller
      */
     public function show(Semester $semester): Response
     {
-        $this->authorize('semesters.show', $semester);
+        $this->authorize('semesters.view', $semester);
 
         return Inertia::render('Admin/Semester/Show', [
             'semester' => $semester,

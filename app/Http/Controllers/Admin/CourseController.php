@@ -23,7 +23,7 @@ class CourseController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize('courses.showAny', Course::class);
+        $this->authorize('courses.viewAny', Course::class);
 
         return Inertia::render('Admin/Course/Index', array_merge(Course::search($request), [
             'can' => [
@@ -71,7 +71,7 @@ class CourseController extends Controller
      */
     public function show(Course $course): Response
     {
-        $this->authorize('courses.show', $course);
+        $this->authorize('courses.view', $course);
 
         return Inertia::render('Admin/Course/Show', [
             'course' => $course,

@@ -25,7 +25,7 @@ class PrintQueueController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize('print_queues.showAny', PrintQueue::class);
+        $this->authorize('print_queues.viewAny', PrintQueue::class);
 
         return Inertia::render('Admin/PrintQueue/Index', array_merge(PrintQueue::search($request), [
             'can' => [
@@ -61,7 +61,7 @@ class PrintQueueController extends Controller
      */
     public function show(PrintQueue $queue): Response
     {
-        $this->authorize('print_queues.show', $queue);
+        $this->authorize('print_queues.view', $queue);
 
         return Inertia::render('Admin/PrintQueue/Show', [
             'printQueue' => PrintQueue::getDataForShow($queue),

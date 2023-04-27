@@ -26,7 +26,7 @@ class DispatchController extends Controller
      */
     public function index(Requirement $requirement, Request $request): Response
     {
-        $this->authorize('dispatches.showAny', Dispatch::class);
+        $this->authorize('dispatches.viewAny', Dispatch::class);
 
         $requirement = Requirement::with(['enrollment' => ['student', 'course']])->find($requirement->id);
 
@@ -88,7 +88,7 @@ class DispatchController extends Controller
      */
     public function show(Requirement $requirement, Dispatch $dispatch): Response
     {
-        $this->authorize('dispatches.show', $dispatch);
+        $this->authorize('dispatches.view', $dispatch);
 
         $requirement = Requirement::with(['enrollment' => ['student', 'course']])->find($requirement->id);
         $dispatch = Dispatch::with(['user'])->find($dispatch->id);

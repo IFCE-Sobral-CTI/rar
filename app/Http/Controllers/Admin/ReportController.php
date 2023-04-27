@@ -22,7 +22,7 @@ class ReportController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize('reports.showAny', Report::class);
+        $this->authorize('reports.viewAny', Report::class);
 
         return Inertia::render('Admin/Report/Index', array_merge(Report::search($request), [
             'can' => [
@@ -36,7 +36,7 @@ class ReportController extends Controller
      */
     public function show(Report $report): Response
     {
-        $this->authorize('reports.show', $report);
+        $this->authorize('reports.view', $report);
 
         return Inertia::render('Admin/Report/Show', [
             'report' => Report::getDataForShow($report),

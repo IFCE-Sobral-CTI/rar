@@ -28,7 +28,7 @@ class RequirementController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize('requirements.showAny', Requirement::class);
+        $this->authorize('requirements.viewAny', Requirement::class);
 
         return Inertia::render('Admin/Requirement/Index', array_merge(Requirement::search($request), [
             'can' => [
@@ -82,7 +82,7 @@ class RequirementController extends Controller
      */
     public function show(Requirement $requirement): Response
     {
-        $this->authorize('requirements.show', $requirement);
+        $this->authorize('requirements.view', $requirement);
 
         $requirement = Requirement::with(['enrollment' => ['student', 'course'], 'weekdays', 'semester', 'requirementType'])->find($requirement->id);
 

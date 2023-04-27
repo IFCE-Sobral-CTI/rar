@@ -24,7 +24,7 @@ class WeekdayController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize('weekdays.showAny', Weekday::class);
+        $this->authorize('weekdays.viewAny', Weekday::class);
 
         return Inertia::render('Admin/Weekday/Index', array_merge(Weekday::search($request), [
             'can' => [
@@ -72,7 +72,7 @@ class WeekdayController extends Controller
      */
     public function show(Weekday $weekday): Response
     {
-        $this->authorize('weekdays.show', $weekday);
+        $this->authorize('weekdays.view', $weekday);
 
         return Inertia::render('Admin/Weekday/Show', [
             'weekday' => $weekday,

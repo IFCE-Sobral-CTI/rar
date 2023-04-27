@@ -24,7 +24,7 @@ class StudentController extends Controller
      */
     public function index(Request $request): Response
     {
-        $this->authorize('students.showAny', Student::class);
+        $this->authorize('students.viewAny', Student::class);
 
         return Inertia::render('Admin/Student/Index', array_merge(Student::search($request), [
             'can' => [
@@ -72,7 +72,7 @@ class StudentController extends Controller
      */
     public function show(Student $student): Response
     {
-        $this->authorize('students.show', $student);
+        $this->authorize('students.view', $student);
 
         return Inertia::render('Admin/Student/Show', [
             'student' => $student,
