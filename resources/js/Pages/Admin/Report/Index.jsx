@@ -17,6 +17,19 @@ function Index({ reports, count, page, termSearch, can }) {
         return () => clearTimeout(debounce);
     }, [term]);
 
+    const status = (status) => {
+        let className = 'py-1 px-2 rounded-md text-sm text-white';
+        if (status) {
+            className += ' bg-green-500';
+        } else {
+            className += ' bg-yellow-500';
+        }
+
+        return (
+            <span className={className}>{status == '1' ? 'Enviado' : 'Não enviado'}</span>
+        )
+    }
+
     const table = reports.data.map((item, index) => {
         return (
             <tr key={index} className={"border-t transition hover:bg-neutral-100 " + (index % 2 == 0? 'bg-neutral-50': '')}>
@@ -33,6 +46,11 @@ function Index({ reports, count, page, termSearch, can }) {
                 <td className="px-1 py-3 font-light">
                     <Link href={can.view? route('reports.show', item.id): route('reports.index', {term: term, page: currentPage})}>
                         {item.dispatches.length}
+                    </Link>
+                </td>
+                <td className="px-1 py-3 font-light">
+                    <Link href={can.view? route('reports.show', item.id): route('reports.index', {term: term, page: currentPage})}>
+                        {status(item.printed)}
                     </Link>
                 </td>
                 <td className="flex justify-end py-3 pr-2 text-neutral-400">
@@ -77,6 +95,7 @@ function Index({ reports, count, page, termSearch, can }) {
                                 <th className="px-1 pt-3 font-semibold text-left w-3/12">Data</th>
                                 <th className="px-1 pt-3 font-semibold text-left w-6/12">Usuário</th>
                                 <th className="px-1 pt-3 font-semibold text-left w-1/12">Requerimentos</th>
+                                <th className="px-1 pt-3 font-semibold text-left w-2/12">Reprografia</th>
                                 <th className="w-1/12"></th>
                             </tr>
                         </thead>

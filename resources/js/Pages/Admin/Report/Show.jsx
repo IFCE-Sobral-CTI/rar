@@ -6,9 +6,22 @@ import Button from "@/Components/Form/Button";
 import DeleteModal from "@/Components/Dashboard/DeleteModal";
 import ShowField from "@/Components/Dashboard/ShowField";
 import Pagination from "@/Components/Dashboard/Pagination";
+import Confirmation from "@/Components/Dashboard/Confirmation";
 
 function Show({ report, dispatches, can }) {
-    console.log(report);
+    const status = (status) => {
+        let className = 'py-1 px-2 rounded-md text-sm text-white';
+        if (status) {
+            className += ' bg-green-500';
+        } else {
+            className += ' bg-yellow-500';
+        }
+
+        return (
+            <span className={className}>{status == '1' ? 'Enviado' : 'Não enviado'}</span>
+        )
+    }
+
     const table = dispatches.dispatches.data.map((item, index) => {
         return (
             <tr key={index} className={"border-t transition hover:bg-neutral-100 " + (index % 2 == 0? 'bg-neutral-50': '')}>
@@ -51,6 +64,7 @@ function Show({ report, dispatches, can }) {
                 <Panel className={'flex gap-4'}>
                     <ShowField label={'Criado em'} value={report.created_at} />
                     <ShowField label={'Criado por'} value={report.user.name} />
+                    <ShowField label={'Enviado para reprografia'} value={status(report.printed)} />
                 </Panel>
 
                 <Panel>
@@ -76,6 +90,18 @@ function Show({ report, dispatches, can }) {
                         </svg>
                         <span>Voltar</span>
                     </Button>
+                    {(can.update && !report.printed) &&
+                        <Confirmation
+                            url={route('reports.update', report.id)}
+                            method={'put'}
+                            values={{printed: true}}
+                            message={'Após a confirmação um e-mail será enviado a reprografia que fará a impressão dos cartões e esse relatório constará como impresso. Você confirma o envio para a reprografia?'}
+                            textButton={'Enviar para reprografia'}
+                            iconButton={<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" className="w-5 h-5">
+                                <path fill="currentColor" d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576L6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76l7.494-7.493Z"/>
+                            </svg>}
+                        />
+                    }
                     {can.delete && <DeleteModal url={route('reports.destroy', report.id)} />}
                 </Panel>
             </AuthenticatedLayout>

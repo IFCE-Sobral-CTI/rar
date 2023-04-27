@@ -22,7 +22,12 @@ class RuleSeeder extends Seeder
         $groups = [
             'reports' => [
                 'group' => Group::firstOrCreate(['description' => 'Relatórios']),
-                'only' => ['Página inicial' => 'viewAny', 'Detalhes' => 'view', 'Apagar' => 'delete'],
+                'only' => [
+                    'Página inicial' => 'viewAny',
+                    'Detalhes' => 'view',
+                    'Apagar' => 'delete',
+                    'Atualizar' => 'update',
+                ],
             ],
             'print_queues' => [
                 'group' => Group::firstOrCreate(['description' => 'Fila de Impressão']),
