@@ -13,7 +13,15 @@ export default function Form({data, errors, handleSubmit, onHandleChange, proces
             </div>
             <div className="mb-4">
                 <label htmlFor="cpf" className="font-light">C.P.F.</label>
-                <Input mask={'000.000.000-00'} initialValue={data.cpf} name={'cpf'} handleChange={onHandleChange} required={true} placeholder="Cadastro de Pessoal Física" className={'w-full'} />
+                <Input
+                    mask={'000.000.000-00'}
+                    initialValue={data.cpf}
+                    name={'cpf'}
+                    handleChange={onHandleChange}
+                    required={true}
+                    placeholder="Cadastro de Pessoal Física"
+                    className={'w-full'}
+                />
                 <InputError message={errors.cpf} />
             </div>
             <div className="mb-4">
