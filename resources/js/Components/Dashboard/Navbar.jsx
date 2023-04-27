@@ -1,10 +1,18 @@
-import 'tw-elements';
-import React from "react";
+import {
+    Dropdown,
+    initTE,
+  } from "tw-elements";
+import React, { useEffect } from "react";
 import {Link, useForm, usePage} from "@inertiajs/react";
 
 function Navbar() {
     const { auth, title } = usePage().props;
     const { post } = useForm();
+
+    useEffect(() => {
+        initTE({Dropdown});
+    }, []);
+
     const onHandleLogout = () => {
         post(route('logout'));
     }
@@ -21,8 +29,6 @@ function Navbar() {
                         className="p-2"
                         data-te-collapse-init
                         data-te-target="#sidebar"
-                        data-te-ripple-init
-                        data-te-ripple-color="light"
                         aria-controls="sidebar"
                         aria-expanded="false"
                     >
@@ -38,13 +44,16 @@ function Navbar() {
                     <h1 className="text-xl font-semibold">{title}</h1>
                 </div>
                 <div className="px-4">
-                    <div data-te-dropdown-ref>
-                        <button className="flex items-center gap-2"
-                            id="dropdownMenuButton2"
+                    <div
+                        data-te-dropdown-ref
+                        className="relative"
+                    >
+                        <button
+                            type='button'
+                            className="flex items-center gap-2"
+                            id="user-info"
                             data-te-dropdown-toggle-ref
                             aria-expanded="false"
-                            data-te-ripple-init
-                            data-te-ripple-color="light"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-7 w-7" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
@@ -54,13 +63,13 @@ function Navbar() {
                         </button>
                         <ul
                             className="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg [&[data-te-dropdown-show]]:block"
-                            aria-labelledby="dropdownMenuButton2"
+                            aria-labelledby="user-info"
                             data-te-dropdown-menu-ref
                         >
                             <li>
                                 <Link
                                     href={route('profile')}
-                                    className="block w-full px-4 py-2 text-sm font-normal text-center text-gray-700 bg-transparent dropdown-item whitespace-nowrap hover:bg-gray-100"
+                                    className="block w-36 px-4 py-2 text-sm font-normal text-center text-gray-700 bg-transparent dropdown-item whitespace-nowrap hover:bg-gray-100"
                                     data-te-dropdown-item-ref
                                 >
                                     Perfil
