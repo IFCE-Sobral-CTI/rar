@@ -7,7 +7,7 @@ import { useForm } from "@inertiajs/react";
 import Button from "@/Components/Form/Button";
 import InputError from "@/Components/InputError";
 
-export default function Enrollments({ enrollments, student, requirements }) {
+export default function Enrollments({ enrollments, student, requirements, listWeekDays }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         enrollment: null,
         requirement: null,
@@ -74,30 +74,14 @@ export default function Enrollments({ enrollments, student, requirements }) {
                             {!weekDays.length && <p className='text-sm font-semibold text-red-400'>Por favor, selecionar ao menos um dia da semana para continuar sua solicitação.</p>}
                         </div>
                         <div className="grid grid-cols-2 gap-2">
-                            <div className="flex flex-row items-center gap-2">
-                                <input type="checkbox" name="mo" value={1} id='mo' onChange={toggleWeekDay} className='w-5 h-5 border-gray-500 rounded' />
-                                <label htmlFor='mo'>Segunda-feira</label>
-                            </div>
-                            <div className="flex flex-row items-center gap-2">
-                                <input type="checkbox" name="tu" value={2} id='tu' onChange={toggleWeekDay} className='w-5 h-5 border-gray-500 rounded' />
-                                <label htmlFor='tu'>Terça-feira</label>
-                            </div>
-                            <div className="flex flex-row items-center gap-2">
-                                <input type="checkbox" name="we" value={3} id='we' onChange={toggleWeekDay} className='w-5 h-5 border-gray-500 rounded' />
-                                <label htmlFor='we'>Quarta-feira</label>
-                            </div>
-                            <div className="flex flex-row items-center gap-2">
-                                <input type="checkbox" name="th" value={4} id='th' onChange={toggleWeekDay} className='w-5 h-5 border-gray-500 rounded' />
-                                <label htmlFor='th'>Quinta-feira</label>
-                            </div>
-                            <div className="flex flex-row items-center gap-2">
-                                <input type="checkbox" name="fr" value={5} id='fr' onChange={toggleWeekDay} className='w-5 h-5 border-gray-500 rounded' />
-                                <label htmlFor='fr'>Sexta-feira</label>
-                            </div>
-                            <div className="flex flex-row items-center gap-2">
-                                <input type="checkbox" name="sa" value={6} id='sa' onChange={toggleWeekDay} className='w-5 h-5 border-gray-500 rounded' />
-                                <label htmlFor='sa'>Sábado</label>
-                            </div>
+                            {listWeekDays.map((item, index) => {
+                                return (
+                                    <div className="flex flex-row items-center gap-2" key={index}>
+                                        <input type="checkbox" name="mo" value={item.id} id='mo' onChange={toggleWeekDay} className='w-5 h-5 border-gray-500 rounded' />
+                                        <label htmlFor='mo'>{item.description}</label>
+                                    </div>
+                                )
+                            })}
                         </div>
                         <InputError message={errors.weekday} className="mt-2" />
                     </Panel>
@@ -133,8 +117,8 @@ export default function Enrollments({ enrollments, student, requirements }) {
                                 processing={processing}
                             >
                                 <option value="">Selecione uma matricula/curso</option>
-                                {requirements.map((item, i) => {
-                                    return <option value={item.id} key={i}>{item.description}</option>
+                                {requirements.map((item, index) => {
+                                    return <option value={item.id} key={index}>{item.description}</option>
                                 })}
                             </Select>
                             {!data.requirement && <p className='text-sm font-semibold text-red-400'>Por favor, selecionar um tipo de requerimento para continuar sua solicitação.</p>}

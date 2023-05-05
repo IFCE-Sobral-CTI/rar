@@ -15,6 +15,12 @@ class CourseSeeder extends Seeder
     {
         Course::insert([
             [
+                'cod' => '00000',
+                'name' => 'Curso não encontrado',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'cod' => '07333',
                 'name' => 'Tecnologia em Saneamento Ambiental',
                 'created_at' => now(),

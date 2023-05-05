@@ -36,7 +36,7 @@ class SemesterFactory extends Factory
             'day' => 1,
         ];
 
-        return Carbon::create($start->year, $start->month, $start->day)->format('m-d-Y');
+        return Carbon::create($start->year, $start->month, $start->day)->format('Y-m-d');
     }
 
     private function getEnd(Object $data): string
@@ -48,7 +48,7 @@ class SemesterFactory extends Factory
             'day' => $data->semester == 1? 30: 31,
         ];
 
-        return Carbon::create($end->year, $end->month, $end->day)->format('m-d-Y');
+        return Carbon::create($end->year, $end->month, $end->day)->format('Y-m-d');
     }
 
     /**

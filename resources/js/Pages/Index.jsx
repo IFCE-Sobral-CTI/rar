@@ -8,7 +8,7 @@ import HCaptcha from "@hcaptcha/react-hcaptcha";
 import InputError from '@/Components/InputError';
 import { useForm } from '@inertiajs/react';
 
-export default function Index() {
+export default function Index({semester}) {
     const { data, setData, post, processing, errors, reset } = useForm({
         cpf: '',
         rg: '',
@@ -40,10 +40,18 @@ export default function Index() {
         e.preventDefault();
         post(route("home.enrollments.post"), {
             preserveScroll: true,
-            onError: () => captchaRef.current.resetCaptcha(),
+            onError: () => {captchaRef.current.resetCaptcha()},
             onSuccess: () => {reset(); captchaRef.current.resetCaptcha()},
         });
     };
+
+    if (!semester) {
+        return (
+            <div className="p-1 bg-white rounded shadow md:shadow-md md:p-4 md:rounded-xl md:w-1/2">
+                <h3 className='text-2xl font-semibold text-center text-red-400'>Fora do período de solicitação de cartão de acesso ao restaurante.</h3>
+            </div>
+        )
+    }
 
     return (
         <>

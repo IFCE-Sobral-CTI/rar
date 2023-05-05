@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('rg', 20, 0)->unique();
             $table->string('name');
             $table->date('birth');
-            $table->string('personal_email');
+            $table->string('personal_email')->nullable();
             $table->string('institutional_email')->nullable();
             $table->timestamps();
         });
