@@ -42,8 +42,8 @@ class Course extends Model
 
     public function scopeSearch(Builder $query, Request $request): array
     {
-        $query->where('name', 'iLIKE', "%{$request->term}%")
-            ->orWhere('cod', 'iLIKE', "%{$request->term}%");
+        $query->where('name', 'like', "%{$request->term}%")
+            ->orWhere('cod', 'like', "%{$request->term}%");
 
         return [
             'count' => $query->count(),

@@ -20,9 +20,9 @@ class Activity extends ModelsActivity
     public function scopeSearch(Builder $query, Request $request)
     {
         $query->with('causer')->whereHas('causer', function ($query) use ($request) {
-            return $query->where('name', 'iLIKE', "%".$request->term."%");
+            return $query->where('name', 'like', "%".$request->term."%");
         })
-        ->orWhere('subject_type', 'iLIKE', '%'.$request->term.'%');
+        ->orWhere('subject_type', 'like', '%'.$request->term.'%');
 
         return [
             'count' => $query->count(),

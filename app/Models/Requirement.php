@@ -70,17 +70,17 @@ class Requirement extends Model
         $query->with(['enrollment' => ['student'], 'semester', 'requirementType', 'weekdays'])->where(function($query) use ($request) {
             return $query->orWhereHas('enrollment', function($query) use ($request) {
                 return $query->where(function($query) use ($request) {
-                    return $query->where('number', 'iLIKE', "%{$request->term}%")
+                    return $query->where('number', 'like', "%{$request->term}%")
                         ->orWhereHas('student', function($query) use ($request) {
-                            return $query->where('name', 'iLIKE', "%{$request->term}%");
+                            return $query->where('name', 'like', "%{$request->term}%");
                         });
                 });
             })
             ->orWhereHas('semester', function ($query) use ($request) {
-                return $query->where('description', 'iLIKE', "%{$request->term}%");
+                return $query->where('description', 'like', "%{$request->term}%");
             })
             ->orWhereHas('requirementType', function ($query) use ($request) {
-                return $query->where('description', 'iLIKE', "%{$request->term}%");
+                return $query->where('description', 'like', "%{$request->term}%");
             });
         });
 

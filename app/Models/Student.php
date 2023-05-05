@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Traits\CreatedAndUpdatedTz;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -55,11 +57,11 @@ class Student extends Model
 
     public function scopeSearch(Builder $query, Request $request): array
     {
-        $query->where('cpf', 'iLIKE', "%{$request->term}%")
-            ->orWhere('rg', 'iLIKE', "%{$request->term}%")
-            ->orWhere('name', 'iLIKE', "%{$request->term}%")
+        $query->where('cpf', 'like', "%{$request->term}%")
+            ->orWhere('rg', 'like', "%{$request->term}%")
+            ->orWhere('name', 'like', "%{$request->term}%")
             ->orWhereHas('enrollments', function($query) use ($request) {
-                return $query->where('number', 'iLIKE', "%{$request->term}%");
+                return $query->where('number', 'like', "%{$request->term}%");
             });
 
         return [

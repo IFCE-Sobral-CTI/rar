@@ -47,9 +47,9 @@ class Enrollment extends Model
     {
         $query = $student->enrollments()->with('course')->where(function($query) use ($request) {
             return $query->orWhereHas('course', function($query) use ($request) {
-                return $query->where('name', 'iLIKE', "%{$request->term}%");
+                return $query->where('name', 'like', "%{$request->term}%");
             })
-            ->orWhere('number', 'iLIKE', "%{$request->term}%");
+            ->orWhere('number', 'like', "%{$request->term}%");
         });
 
         return [

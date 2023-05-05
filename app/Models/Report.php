@@ -50,8 +50,8 @@ class Report extends Model
                     return $query->whereHas('enrollment', function($query) use ($request) {
                         return $query->where(function($query) use ($request) {
                             return $query->orWhereHas('student', function($query) use ($request) {
-                                return $query->where('name', 'iLIKE', "%$request->term%");
-                            })->orWhere('number', 'iLIKE', "%$request->term%");
+                                return $query->where('name', 'like', "%$request->term%");
+                            })->orWhere('number', 'like', "%$request->term%");
                         });
                     });
                 });

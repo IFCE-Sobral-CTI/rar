@@ -37,9 +37,14 @@ class Weekday extends Model
         return $this->belongsToMany(Requirement::class);
     }
 
+    public function scopeGetActiveDays(Builder $query): Collection
+    {
+        return $query->select('id', 'description')->where('status', true)->get();
+    }
+
     public function scopeSearch(Builder $query, Request $request): array
     {
-        $query->where('description', 'iLIKE', "%{$request->term}%");
+        $query->where('description', 'like', "%{$request->term}%");
 
         return [
             'count' => $query->count(),

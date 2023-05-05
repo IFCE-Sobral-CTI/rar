@@ -68,8 +68,8 @@ class Dispatch extends Model
         $query->with(['user'])
             ->where('requirement_id', $requirement->id)
             ->where(function($query) use ($request) {
-                return $query->where('text', 'iLIKE', "%{$request->term}%")
-                    ->orWhere('observation', 'iLIKE', "%{$request->term}%");
+                return $query->where('text', 'like', "%{$request->term}%")
+                    ->orWhere('observation', 'like', "%{$request->term}%");
             });
 
         return [

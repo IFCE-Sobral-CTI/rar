@@ -35,7 +35,7 @@ class RequirementType extends Model
 
     public function scopeSearch(Builder $query, Request $request): array
     {
-        $query->where('description', 'iLIKE', "%{$request->term}%");
+        $query->where('description', 'like', "%{$request->term}%");
 
         return [
             'count' => $query->count(),
@@ -43,6 +43,11 @@ class RequirementType extends Model
             'page' => $request->page?? 1,
             'termSearch' => $request->term,
         ];
+    }
+
+    public function scopeGetActiveTypes(Builder $query): Collection
+    {
+        return $query->select('id', 'description')->where('status', true)->get();
     }
 
     public function scopeGetDataForSelectInput(Builder $query): Collection

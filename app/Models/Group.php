@@ -63,7 +63,7 @@ class Group extends Model
      */
     public function scopeSearch(Builder $query, Request $request): array
     {
-        $query->where('description', 'ilike', "%{$request->term}%");
+        $query->where('description', 'like', "%{$request->term}%");
 
         return [
             'count' => $query->count(),
