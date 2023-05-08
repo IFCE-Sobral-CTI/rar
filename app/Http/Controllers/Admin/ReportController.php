@@ -7,13 +7,16 @@ use App\Http\Requests\UpdateReportRequest;
 use App\Models\Dispatch;
 use App\Models\PrintQueue;
 use App\Models\Report;
+use App\Services\Pdf;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Inertia\Response;
+use Mpdf\Mpdf;
 
 class ReportController extends Controller
 {
@@ -44,6 +47,7 @@ class ReportController extends Controller
             'can' => [
                 'delete' => Auth::user()->can('reports.delete'),
                 'update' => Auth::user()->can('reports.update'),
+                'print' => Auth::user()->can('reports.print'),
                 'dispatch_view' => Auth::user()->can('dispatches.view'),
             ]
         ]);
@@ -84,5 +88,31 @@ class ReportController extends Controller
         }
 
         return to_route('reports.index')->with('flash', ['status' => 'success', 'message' => 'Registro apagado com sucesso.']);
+    }
+
+    public function printCard(Report $report, Pdf $pdf)
+    {
+        // $report = Report::with(['dispatches' => ['requirement' => ['enrollment' => ['student', 'course']]]])->find($report->id);
+
+        // $pdf = new Mpdf([
+        //     'tempDir' => base_path('storage/fonts'),
+        //     'mode' => 'utf-8',
+        //     'orientation' => 'L',
+        // ]);
+
+        // $pdf->WriteHTML(View::make('print', [
+        //     'report' => $report->dispatches->chunk(10),
+        // ])->render());
+
+        // return $pdf->Output('document.pdf', base_path('storage/fonts'));
+
+        return response($pdf->generate($report), 200)->withHeaders([
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => "{$pdf->action()}; filename='invoice-{$report->id}.pdf'",
+        ]);
+
+        // return View::make('print2', [
+        //     'report' => $report->dispatches->chunk(10),
+        // ])->render();
     }
 }
