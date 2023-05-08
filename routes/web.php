@@ -66,8 +66,11 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
         ->names('print_queues');
     Route::post('print/queues/send/report', [PrintQueueController::class, 'send'])->name('print_queues.send');
 
+    Route::get('report/print/view/{report}', [ReportController::class, 'printCard'])->name('report.print');
+
     Route::resource('print/reports', ReportController::class)
         ->only(['index', 'show', 'destroy', 'update']);
 });
+
 
 require __DIR__.'/auth.php';
