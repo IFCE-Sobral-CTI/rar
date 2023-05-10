@@ -90,10 +90,10 @@ function Show({ report, dispatches, can }) {
                         </svg>
                         <span>Voltar</span>
                     </Button>
-                    {(can.update && !report.printed) &&
+                    {(can.update) &&
                         <Confirmation
-                            url={route('reports.update', report.id)}
-                            method={'put'}
+                            url={route('reports.send', report.id)}
+                            method={'get'}
                             values={{printed: true}}
                             message={'Após a confirmação um e-mail será enviado a reprografia que fará a impressão dos cartões e esse relatório constará como impresso. Você confirma o envio para a reprografia?'}
                             textButton={'Enviar para reprografia'}
@@ -102,13 +102,17 @@ function Show({ report, dispatches, can }) {
                             </svg>}
                         />
                     }
-                    {(can.print && !!report.printed) &&
-                        <Button href={route('report.print', report.id)} className={'gap-2'} color={'blue'} target={'_blank'}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" className="h-5 w-5">
-                                <path fill="currentColor" d="M16 8V5H8v3H6V3h12v5h-2ZM4 10h16H4Zm14 2.5q.425 0 .713-.288T19 11.5q0-.425-.288-.713T18 10.5q-.425 0-.713.288T17 11.5q0 .425.288.713T18 12.5ZM16 19v-4H8v4h8Zm2 2H6v-4H2v-6q0-1.275.875-2.138T5 8h14q1.275 0 2.138.863T22 11v6h-4v4Zm2-6v-4q0-.425-.288-.713T19 10H5q-.425 0-.713.288T4 11v4h2v-2h12v2h2Z"/>
+                    {(!!report.file) &&
+                        <a
+                            href={route('reports.view', { report: report.id })}
+                            className='inline-flex gap-2 items-center px-4 py-2 border border-transparent tracking-widest text-sm rounded-lg text-white transition ease-in-out duration-150 focus:ring-2 bg-blue-500 hover:bg-blue-600 focus:ring-blue-300 '
+                            target='_blank'
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" className="h-5 w-5">
+                                <path fill="currentColor" fillRule="evenodd" d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM1.6 11.85H0v3.999h.791v-1.342h.803c.287 0 .531-.057.732-.173c.203-.117.358-.275.463-.474a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.476-.158-.677a1.176 1.176 0 0 0-.46-.477c-.2-.12-.443-.179-.732-.179Zm.545 1.333a.795.795 0 0 1-.085.38a.574.574 0 0 1-.238.241a.794.794 0 0 1-.375.082H.788V12.48h.66c.218 0 .389.06.512.181c.123.122.185.296.185.522Zm1.217-1.333v3.999h1.46c.401 0 .734-.08.998-.237a1.45 1.45 0 0 0 .595-.689c.13-.3.196-.662.196-1.084c0-.42-.065-.778-.196-1.075a1.426 1.426 0 0 0-.589-.68c-.264-.156-.599-.234-1.005-.234H3.362Zm.791.645h.563c.248 0 .45.05.609.152a.89.89 0 0 1 .354.454c.079.201.118.452.118.753a2.3 2.3 0 0 1-.068.592a1.14 1.14 0 0 1-.196.422a.8.8 0 0 1-.334.252a1.298 1.298 0 0 1-.483.082h-.563v-2.707Zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638H7.896Z"/>
                             </svg>
-                            <span>Imprimir</span>
-                        </Button>
+                            <span>Visualizar</span>
+                        </a>
                     }
                     {can.delete && <DeleteModal url={route('reports.destroy', report.id)} />}
                 </Panel>
