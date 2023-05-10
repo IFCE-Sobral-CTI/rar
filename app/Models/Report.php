@@ -18,7 +18,8 @@ class Report extends Model
 
     protected $fillable = [
         'user_id',
-        'printed'
+        'printed',
+        'file'
     ];
 
     public function dispatches(): BelongsToMany
@@ -36,7 +37,8 @@ class Report extends Model
         return LogOptions::defaults()
             ->logOnly([
                 'user.name',
-                'printed'
+                'printed',
+                'file'
             ])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
