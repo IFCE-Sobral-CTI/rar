@@ -75,4 +75,10 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
         ->only(['index', 'show', 'destroy', 'update']);
 });
 
+Route::get('/mail', function() {
+    $report = Report::find(5);
+
+    return new SendToReprography($report);
+});
+
 require __DIR__.'/auth.php';
