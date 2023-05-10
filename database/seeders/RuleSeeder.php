@@ -28,6 +28,10 @@ class RuleSeeder extends Seeder
                     'Apagar' => 'delete',
                     'Atualizar' => 'update',
                 ],
+                'additional' => [
+                    'Visualizar em PDF' => 'reports.view',
+                    'Enviar para reprografia' => 'reports.send',
+                ]
             ],
             'print_queues' => [
                 'group' => Group::firstOrCreate(['description' => 'Fila de Impressão']),
