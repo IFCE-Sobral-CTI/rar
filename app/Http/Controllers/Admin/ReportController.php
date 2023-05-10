@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateReportRequest;
+use App\Mail\SendToReprography;
 use App\Models\Dispatch;
 use App\Models\PrintQueue;
 use App\Models\Report;
@@ -13,6 +14,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -81,6 +84,9 @@ class ReportController extends Controller
                 ]);
             }
 
+            if (Storage::exists($report->file))
+                Storage::delete($report->file);
+                
             $report->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -90,29 +96,41 @@ class ReportController extends Controller
         return to_route('reports.index')->with('flash', ['status' => 'success', 'message' => 'Registro apagado com sucesso.']);
     }
 
-    public function printCard(Report $report, Pdf $pdf)
+    /**
+     * Send email with attachment for reprography
+     */
+    public function send(Request $request, Report $report): RedirectResponse
     {
-        // $report = Report::with(['dispatches' => ['requirement' => ['enrollment' => ['student', 'course']]]])->find($report->id);
+        $this->authorize('reports.send', $report);
+        try {
+            $report->update(['printed' => true]);
+            Mail::to(env('MAIL_REPROGRAPHY'))->send(new SendToReprography($report));
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            return to_route('reports.show', $report->id)->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
+        }
 
-        // $pdf = new Mpdf([
-        //     'tempDir' => base_path('storage/fonts'),
-        //     'mode' => 'utf-8',
-        //     'orientation' => 'L',
-        // ]);
+        return to_route('reports.show', $report)->with('flash', ['status' => 'success', 'message' => 'E-mail enviado com sucesso.']);
+    }
 
-        // $pdf->WriteHTML(View::make('print', [
-        //     'report' => $report->dispatches->chunk(10),
-        // ])->render());
+    /**
+     * Stream PDF file
+     */
+    public function view(Report $report)
+    {
+        $this->authorize('reports.view', $report);
 
-        // return $pdf->Output('document.pdf', base_path('storage/fonts'));
+        if (!$report->file)
+            return to_route('reports.show', $report->id)->with('flash', ['status' => 'warning', 'message' => 'O arquivo PDF não existe.']);
 
-        return response($pdf->generate($report), 200)->withHeaders([
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => "{$pdf->action()}; filename='invoice-{$report->id}.pdf'",
-        ]);
+        $filePath = explode('/', $report->file);
+        $headers = [
+            "content-type" => "application/pdf",
+            "filename" => array_pop($filePath)
+        ];
 
-        // return View::make('print2', [
-        //     'report' => $report->dispatches->chunk(10),
-        // ])->render();
+        return response()->stream(function () use ($report) {
+            echo Storage::get($report->file);
+        }, 200, $headers);
     }
 }
