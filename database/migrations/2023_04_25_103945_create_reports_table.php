@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->boolean('printed')->default(false);
+            $table->string('file')->nullable();
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')
