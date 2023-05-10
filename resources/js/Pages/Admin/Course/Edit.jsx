@@ -8,7 +8,7 @@ function Edit({ course }) {
     const { data, setData, put, processing, errors } = useForm({
         cod: course.cod,
         name: course.name,
-        status: course.status,
+        status: course.status? 1: 0,
         id: course.id,
     });
 
