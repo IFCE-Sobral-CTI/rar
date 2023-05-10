@@ -9,10 +9,12 @@ function Edit({ student }) {
         cpf: student.cpf,
         rg: student.rg,
         name: student.name,
-        birth: student.birth,
+        birth: student.birth.split('/').reverse().join('-'),
         personal_email: student.personal_email,
         institutional_email: student.institutional_email,
     });
+
+    console.log(data.birth);
 
     const onHandleChange = (event) => {
         setData(event.target.name, event.target.value);
