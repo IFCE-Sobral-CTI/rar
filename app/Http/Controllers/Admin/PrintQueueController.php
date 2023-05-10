@@ -7,6 +7,7 @@ use App\Models\Dispatch;
 use App\Models\PrintQueue;
 use App\Models\Report;
 use App\Models\Requirement;
+use App\Services\Pdf;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -20,8 +21,6 @@ class PrintQueueController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @throws AuthorizationException
      */
     public function index(Request $request): Response
     {
@@ -35,29 +34,7 @@ class PrintQueueController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @throws AuthorizationException
-     */
-    public function create(): void
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @throws AuthorizationException
-     */
-    public function store(Request $request): void
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
-     *
-     * @throws AuthorizationException
      */
     public function show(PrintQueue $queue): Response
     {
@@ -72,29 +49,7 @@ class PrintQueueController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @throws AuthorizationException
-     */
-    public function edit(PrintQueue $print_queue): void
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @throws AuthorizationException
-     */
-    public function update(Request $request, PrintQueue $print_queue): void
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
-     *
-     * @throws AuthorizationException
      */
     public function destroy(PrintQueue $queue): RedirectResponse
     {
@@ -116,7 +71,7 @@ class PrintQueueController extends Controller
         return to_route('print_queues.index')->with('flash', ['status' => 'success', 'message' => 'Registro apagado com sucesso.']);
     }
 
-    public function send(Request $request): RedirectResponse
+    public function send(Request $request, Pdf $pdf): ?RedirectResponse
     {
         $this->authorize('print_queues.send', PrintQueue::class);
 
@@ -134,7 +89,7 @@ class PrintQueueController extends Controller
             Log::error($e->getMessage());
             return to_route('print_queues.index')->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
         }
-
-        return to_route('print_queues.index')->with('flash', ['status' => 'success', 'message' => 'Registro enviados para impressão com sucesso.']);
+        // Gera o PDF e redireciona para o index das filas de impressão
+        return $pdf->generate($report);
     }
 }
