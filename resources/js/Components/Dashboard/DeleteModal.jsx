@@ -15,7 +15,6 @@ export default function DeleteModal({ url }) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log('Clicou');
         destroy(url, {
             preserveScroll: true
         });
