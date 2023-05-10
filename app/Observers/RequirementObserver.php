@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use App\Mail\CreateRequirementMail;
 use App\Models\Requirement;
+use Illuminate\Support\Facades\Mail;
 
 class RequirementObserver
 {
@@ -11,7 +13,9 @@ class RequirementObserver
      */
     public function created(Requirement $requirement): void
     {
-        //
+        Mail::to($requirement->enrollment->student->personal_email)
+            ->cc($requirement->enrollment->student->institucional_email)
+            ->send(new CreateRequirementMail($requirement));
     }
 
     /**
