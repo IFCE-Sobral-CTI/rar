@@ -19,8 +19,8 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RequirementTypeController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\WeekdayController;
-use App\Mail\SendToReprography;
-use App\Models\Report;
+use App\Mail\CreateRequirementMail;
+use App\Models\Requirement;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,9 +76,9 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
 });
 
 Route::get('/mail', function() {
-    $report = Report::find(5);
+    $requirement = Requirement::find(1);
 
-    return new SendToReprography($report);
+    return new CreateRequirementMail($requirement);
 });
 
 require __DIR__.'/auth.php';
