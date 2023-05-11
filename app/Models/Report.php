@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -25,6 +26,11 @@ class Report extends Model
     public function dispatches(): BelongsToMany
     {
         return $this->belongsToMany(Dispatch::class);
+    }
+
+    public function tokens(): MorphMany
+    {
+        return $this->morphMany(AccessToken::class, 'tokenable');
     }
 
     public function user(): BelongsTo
