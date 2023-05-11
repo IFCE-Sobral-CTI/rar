@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\RequirementTypeController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\WeekdayController;
 use App\Mail\CreateDispatchMail;
+use App\Mail\UpdateDispatchMail;
 use App\Models\Dispatch;
 
 /*
@@ -78,7 +79,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
 Route::get('/mail', function() {
     $dispatch = Dispatch::find(28);
 
-    return new CreateDispatchMail($dispatch);
+    return new UpdateDispatchMail($dispatch);
 });
 
 require __DIR__.'/auth.php';
