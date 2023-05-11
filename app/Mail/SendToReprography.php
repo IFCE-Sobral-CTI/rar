@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\AccessToken;
 use App\Models\Report;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +21,10 @@ class SendToReprography extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(private Report $report)
+    public function __construct(
+        private Report $report,
+        private AccessToken $token
+    )
     {
         $this->afterCommit();
     }
@@ -36,6 +40,7 @@ class SendToReprography extends Mailable implements ShouldQueue
             tags: ['IFCE'],
             metadata: [
                 'report_id' => $this->report->id,
+                'access_token' => $this->token->token
             ]
         );
     }
@@ -48,7 +53,8 @@ class SendToReprography extends Mailable implements ShouldQueue
         return new Content(
             markdown: 'mail.sendToReprography',
             with: [
-                'report' => $this->report
+                'report' => $this->report,
+                'token' => $this->token->token
             ]
         );
     }
