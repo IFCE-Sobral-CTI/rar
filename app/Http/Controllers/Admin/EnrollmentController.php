@@ -20,8 +20,6 @@ class EnrollmentController extends Controller
 {
    /**
      * Display a listing of the resource.
-     *
-     * @throws AuthorizationException
      */
     public function index(Student $student, Request $request): Response
     {
@@ -38,8 +36,6 @@ class EnrollmentController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @throws AuthorizationException
      */
     public function create(Student $student): Response
     {
@@ -53,10 +49,8 @@ class EnrollmentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @throws AuthorizationException
      */
-    public function store(StoreEnrollmentRequest $request, Student $student): RedirectResponse
+    public function store( Student $student, StoreEnrollmentRequest $request): RedirectResponse
     {
         $this->authorize('enrollments.create', Enrollment::class);
 
@@ -67,15 +61,13 @@ class EnrollmentController extends Controller
             return to_route('students.enrollments.create', $student->id)->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
         }
 
-        return to_route('enrollments.show', $enrollment)->with('flash', ['status' => 'success', 'message' => 'Registro salvo com sucesso.']);
+        return to_route('students.enrollments.show', ['enrollment' => $enrollment, 'student' => $student])->with('flash', ['status' => 'success', 'message' => 'Registro salvo com sucesso.']);
     }
 
     /**
      * Display the specified resource.
-     *
-     * @throws AuthorizationException
      */
-    public function show(Enrollment $enrollment): Response
+    public function show( Student $student, Enrollment $enrollment): Response
     {
         $this->authorize('enrollments.view', $enrollment);
 
@@ -90,25 +82,22 @@ class EnrollmentController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @throws AuthorizationException
      */
-    public function edit(Enrollment $enrollment): Response
+    public function edit(Student $student, Enrollment $enrollment): Response
     {
         $this->authorize('enrollments.update', $enrollment);
 
         return Inertia::render('Admin/Enrollment/Edit', [
             'enrollment' => Enrollment::with(['course', 'student'])->find($enrollment->id),
-            'courses' => Course::select('id', 'name')->orderBy('name', 'ASC')->get()
+            'courses' => Course::select('id', 'name')->orderBy('name', 'ASC')->get(),
+            'student' => $student
         ]);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @throws AuthorizationException
      */
-    public function update(UpdateEnrollmentRequest $request, Enrollment $enrollment): RedirectResponse
+    public function update(UpdateEnrollmentRequest $request, Student $student, Enrollment $enrollment): RedirectResponse
     {
         $this->authorize('enrollments.update', $enrollment);
 
@@ -116,30 +105,26 @@ class EnrollmentController extends Controller
             $enrollment->update($request->validated());
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return to_route('enrollments.show', $enrollment)->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
+            return to_route('students.enrollments.show', ['enrollment' => $enrollment, 'student' => $student])->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
         }
 
-        return to_route('enrollments.show', $enrollment)->with('flash', ['status' => 'success', 'message' => 'Registro atualizado com sucesso.']);
+        return to_route('students.enrollments.show', ['enrollment' => $enrollment, 'student' => $student])->with('flash', ['status' => 'success', 'message' => 'Registro atualizado com sucesso.']);
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @throws AuthorizationException
      */
-    public function destroy(Enrollment $enrollment): RedirectResponse
+    public function destroy(Student $student, Enrollment $enrollment): RedirectResponse
     {
         $this->authorize('enrollments.delete', $enrollment);
-
-        $student = $enrollment->student;
 
         try {
             $enrollment->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return to_route('enrollments.show', $enrollment->id)->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
+            return to_route('students.enrollments.show', ['enrollment' => $enrollment, 'student' => $student])->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
         }
 
-        return to_route('students.enrollments.index', $student->id)->with('flash', ['status' => 'success', 'message' => 'Registro apagado com sucesso.']);
+        return to_route('students.enrollments.index', $student)->with('flash', ['status' => 'success', 'message' => 'Registro apagado com sucesso.']);
     }
 }

@@ -4,11 +4,12 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Panel from "@/Components/Dashboard/Panel";
 import Form from "./Components/Form";
 
-function Edit({ enrollment, courses }) {
+function Edit({ enrollment, courses, student }) {
     const { data, setData, put, processing, errors } = useForm({
         number: enrollment.number,
         course_id: enrollment.course.id,
         status: enrollment.status? 1: 0,
+        student: student
     });
 
     const onHandleChange = (event) => {
@@ -17,7 +18,7 @@ function Edit({ enrollment, courses }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        put(route('enrollments.update', enrollment.id), {data});
+        put(route('students.enrollments.update', {enrollment: enrollment.id, student: student.id}), {data});
     };
 
     return (
@@ -29,7 +30,7 @@ function Edit({ enrollment, courses }) {
                     { label: 'Alunos(as)', url: route('students.index')},
                     { label: enrollment.student.name, url: route('students.show', { student: enrollment.student.id }) },
                     { label: 'Matricula', url: route('students.enrollments.index', { student: enrollment.student.id }) },
-                    { label: enrollment.number, url: route('enrollments.show', { enrollment: enrollment.id }) },
+                    { label: enrollment.number, url: route('students.enrollments.show', { student: enrollment.student.id, enrollment: enrollment.id }) },
                     { label: 'Editar', url: route('students.enrollments.create', { student: enrollment.student.id }) },
                 ]}
             >

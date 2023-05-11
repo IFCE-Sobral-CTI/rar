@@ -58,7 +58,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
 
     Route::resource('students', StudentController::class);
     Route::resource('courses', CourseController::class);
-    Route::resource('students.enrollments', EnrollmentController::class)->shallow();
+    Route::resource('students.enrollments', EnrollmentController::class);
     Route::resource('requirement/types', RequirementTypeController::class);
     Route::resource('semesters', SemesterController::class);
     Route::resource('weekdays', WeekdayController::class);

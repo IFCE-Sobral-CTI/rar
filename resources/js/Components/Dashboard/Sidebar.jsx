@@ -118,7 +118,7 @@ function Sidebar({ can }) {
                             data-te-collapse-item
                             id="schoolCollapse"
                         >
-                            {can.students_viewAny && <Link
+                            {(can.students_viewAny && can.enrollments_viewAny) && <Link
                                 href={route('students.index', {term: '', page: 1})}
                                 className={(route().current('students.*')? 'bg-gray-50 shadow-md ': '') + `text-gray-600 p-3 rounded-lg hover:bg-white hover:shadow-md transition flex gap-4`}
                             >

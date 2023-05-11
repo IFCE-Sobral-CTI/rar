@@ -35,22 +35,42 @@ function Index({ enrollments, student, count, page, termSearch, can }) {
         return (
             <tr key={index} className={"border-t transition hover:bg-neutral-100 " + (index % 2 == 0? 'bg-neutral-50': '')}>
                 <td className="px-1 py-3 font-light">
-                    <Link href={can.view? route('enrollments.show', item.id): route('students.enrollments.index', {student: student.id, term: term, page: currentPage})}>
+                    <Link
+                        href={can.view
+                            ?route('students.enrollments.show', {student: student.id, enrollment: item.id})
+                            :route('students.enrollments.index', {student: student.id, term: term, page: currentPage})
+                        }
+                    >
                         {item.number}
                     </Link>
                 </td>
                 <td className="px-1 py-3 font-light">
-                    <Link href={can.view? route('enrollments.show', item.id): route('students.enrollments.index', {student: student.id, term: term, page: currentPage})}>
+                    <Link
+                        href={can.view
+                            ?route('students.enrollments.show', {student: student.id, enrollment: item.id})
+                            :route('students.enrollments.index', {student: student.id, term: term, page: currentPage})
+                        }
+                    >
                         {item.course.name}
                     </Link>
                 </td>
                 <td className="px-1 py-3 font-light">
-                    <Link href={can.view? route('enrollments.show', item.id): route('students.enrollments.index', {student: student.id, term: term, page: currentPage})}>
+                    <Link
+                        href={can.view
+                            ?route('students.enrollments.show', {student: student.id, enrollment: item.id})
+                            :route('students.enrollments.index', {student: student.id, term: term, page: currentPage})
+                        }
+                    >
                         {status(item.status)}
                     </Link>
                 </td>
                 <td className="flex justify-end py-3 pr-2 text-neutral-400">
-                    <Link href={can.view? route('enrollments.show', item.id): route('students.enrollments.index', {student: student.id, term: term, page: currentPage})}>
+                    <Link
+                        href={can.view
+                            ?route('students.enrollments.show', {student: student.id, enrollment: item.id})
+                            :route('students.enrollments.index', {student: student.id, term: term, page: currentPage})
+                        }
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-5 h-5" viewBox="0 0 16 16">
                             <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
                         </svg>

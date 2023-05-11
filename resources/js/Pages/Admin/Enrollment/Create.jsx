@@ -8,6 +8,7 @@ function Create({ student, courses }) {
     const { data, setData, post, processing, errors } = useForm({
         number: '',
         course_id: '',
+        student: student
     });
 
     const onHandleChange = (event) => {
