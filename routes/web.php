@@ -19,9 +19,12 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RequirementTypeController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\WeekdayController;
+use App\Http\Middleware\ValidatesReportAccessInHtml;
 use App\Mail\CreateDispatchMail;
+use App\Mail\SendToReprography;
 use App\Mail\UpdateDispatchMail;
 use App\Models\Dispatch;
+use App\Models\Report;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,10 +81,13 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
         ->only(['index', 'show', 'destroy', 'update']);
 });
 
-Route::get('/mail', function() {
-    $dispatch = Dispatch::find(28);
+Route::get('report/print/html/{token}', [ReportController::class, 'htmlWithToken'])->name('reports.html.token')->middleware(ValidatesReportAccessInHtml::class);
 
-    return new UpdateDispatchMail($dispatch);
+Route::get('/mail', function() {
+    $report = Report::find(5);
+    $token = $report->tokens()->first();
+
+    return new SendToReprography(report: $report, token: $token);
 });
 
 require __DIR__.'/auth.php';
