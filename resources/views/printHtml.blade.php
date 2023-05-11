@@ -15,6 +15,9 @@
 
         @viteReactRefresh
         <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            @page {size: 21cm 29.7cm; margin:0px !important; padding:0px !important}
+        </style>
     </head>
     <body>
         @foreach ($report as $dispatches)
