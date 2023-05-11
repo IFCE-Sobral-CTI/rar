@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Mail\CreateDispatchMail;
+use App\Mail\DeleteDispatchMail;
+use App\Mail\UpdateDispatchMail;
 use App\Models\Dispatch;
 use Illuminate\Support\Facades\Mail;
 
@@ -23,7 +25,9 @@ class DispatchObserver
      */
     public function updated(Dispatch $dispatch): void
     {
-        //
+        Mail::to($dispatch->requirement->enrollment->student->personal_email)
+            ->cc($dispatch->requirement->enrollment->student->institucional_email)
+            ->send(new UpdateDispatchMail($dispatch));
     }
 
     /**
@@ -31,7 +35,9 @@ class DispatchObserver
      */
     public function deleted(Dispatch $dispatch): void
     {
-        //
+        Mail::to($dispatch->requirement->enrollment->student->personal_email)
+            ->cc($dispatch->requirement->enrollment->student->institucional_email)
+            ->send(new DeleteDispatchMail($dispatch));
     }
 
     /**
