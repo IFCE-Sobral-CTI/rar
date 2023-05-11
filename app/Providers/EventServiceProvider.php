@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Dispatch;
 use App\Models\Requirement;
+use App\Observers\DispatchObserver;
 use App\Observers\RequirementObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -30,6 +32,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         Requirement::observe(RequirementObserver::class);
+        Dispatch::observe(DispatchObserver::class);
     }
 
     /**
