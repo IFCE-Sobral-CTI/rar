@@ -69,8 +69,10 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
         ->names('print_queues');
     Route::post('print/queues/send/report', [PrintQueueController::class, 'send'])->name('print_queues.send');
 
-    Route::get('report/print/view/{report}', [ReportController::class, 'view'])->name('reports.view');
     Route::get('report/print/send/{report}', [ReportController::class, 'send'])->name('reports.send');
+    Route::get('report/print/pdf/{report}', [ReportController::class, 'pdf'])->name('reports.pdf');
+    Route::get('report/print/html/{report}', [ReportController::class, 'html'])->name('reports.html');
+
 
     Route::resource('print/reports', ReportController::class)
         ->only(['index', 'show', 'destroy', 'update']);

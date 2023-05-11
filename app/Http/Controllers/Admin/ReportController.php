@@ -86,7 +86,7 @@ class ReportController extends Controller
 
             if (Storage::exists($report->file))
                 Storage::delete($report->file);
-                
+
             $report->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -116,11 +116,11 @@ class ReportController extends Controller
     /**
      * Stream PDF file
      */
-    public function view(Report $report)
+    public function pdf(Request $request, Report $report)
     {
         $this->authorize('reports.view', $report);
 
-        if (!$report->file)
+        if (!$report->file && $request->file === 'pdf')
             return to_route('reports.show', $report->id)->with('flash', ['status' => 'warning', 'message' => 'O arquivo PDF não existe.']);
 
         $filePath = explode('/', $report->file);
@@ -132,5 +132,16 @@ class ReportController extends Controller
         return response()->stream(function () use ($report) {
             echo Storage::get($report->file);
         }, 200, $headers);
+    }
+
+    public function html(Request $request, Report $report)
+    {
+        $this->authorize('reports.view', $report);
+
+        $report = Report::with(['dispatches' => ['requirement' => ['enrollment' => ['student', 'course']]]])->find($report->id);
+
+        return View::make('printHtml', [
+            'report' => $report->dispatches->chunk(10),
+        ])->render();
     }
 }
