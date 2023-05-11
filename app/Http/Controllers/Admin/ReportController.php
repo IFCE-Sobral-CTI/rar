@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateReportRequest;
 use App\Mail\SendToReprography;
+use App\Models\AccessToken;
 use App\Models\Dispatch;
 use App\Models\PrintQueue;
 use App\Models\Report;
-use App\Services\Pdf;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 use Inertia\Response;
-use Mpdf\Mpdf;
+use Illuminate\Support\Str;
 
 class ReportController extends Controller
 {
@@ -104,7 +104,12 @@ class ReportController extends Controller
         $this->authorize('reports.send', $report);
         try {
             $report->update(['printed' => true]);
-            Mail::to(env('MAIL_REPROGRAPHY'))->send(new SendToReprography($report));
+            $token = $report->tokens()->create([
+                'token' => Str::random(64),
+                'valid_until' => now()->addDay(),
+                'user_id' => $request->user()->id
+            ]);
+            Mail::to(env('MAIL_REPROGRAPHY'))->send(new SendToReprography($report, $token));
         } catch (Exception $e) {
             Log::error($e->getMessage());
             return to_route('reports.show', $report->id)->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
@@ -139,6 +144,17 @@ class ReportController extends Controller
         $this->authorize('reports.view', $report);
 
         $report = Report::with(['dispatches' => ['requirement' => ['enrollment' => ['student', 'course']]]])->find($report->id);
+
+        return View::make('printHtml', [
+            'report' => $report->dispatches->chunk(10),
+        ])->render();
+    }
+
+    public function htmlWithToken(Request $request)
+    {
+        $token = AccessToken::where('token', $request->token)->first();
+
+        $report = Report::with(['dispatches' => ['requirement' => ['enrollment' => ['student', 'course']]]])->find($token->tokenable->id);
 
         return View::make('printHtml', [
             'report' => $report->dispatches->chunk(10),
