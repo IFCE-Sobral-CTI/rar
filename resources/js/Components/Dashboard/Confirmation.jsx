@@ -42,7 +42,7 @@ export default function Confirmation({ url, message, textButton, iconButton, val
                 type="button"
                 data-te-toggle="modal"
                 data-te-target="#confirmation-modal"
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm tracking-widest text-white transition duration-150 ease-in-out bg-sky-500 border border-transparent rounded-md active:bg-sky-700 hover:bg-sky-600"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm tracking-widest text-white transition duration-150 ease-in-out bg-green-500 border border-transparent rounded-md active:bg-green-700 hover:bg-green-600"
             >
                 {iconButton??
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" className="h-5 w-5">
