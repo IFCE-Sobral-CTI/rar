@@ -19,8 +19,8 @@ use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RequirementTypeController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\WeekdayController;
-use App\Mail\CreateRequirementMail;
-use App\Models\Requirement;
+use App\Mail\CreateDispatchMail;
+use App\Models\Dispatch;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,9 +76,9 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
 });
 
 Route::get('/mail', function() {
-    $requirement = Requirement::find(1);
+    $dispatch = Dispatch::find(28);
 
-    return new CreateRequirementMail($requirement);
+    return new CreateDispatchMail($dispatch);
 });
 
 require __DIR__.'/auth.php';
