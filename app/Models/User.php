@@ -135,4 +135,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Report::class);
     }
+
+    public function accessToken(): BelongsTo
+    {
+        return $this->belongsTo(AccessToken::class);
+    }
 }
