@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Course;
+use App\Models\CourseType;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,8 +19,6 @@ class CourseController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @throws AuthorizationException
      */
     public function index(Request $request): Response
     {
@@ -35,20 +34,18 @@ class CourseController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @throws AuthorizationException
      */
     public function create(): Response
     {
         $this->authorize('courses.create', Course::class);
 
-        return Inertia::render('Admin/Course/Create');
+        return Inertia::render('Admin/Course/Create', [
+            'types' => CourseType::getToForm()
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @throws AuthorizationException
      */
     public function store(StoreCourseRequest $request): RedirectResponse
     {
@@ -66,15 +63,15 @@ class CourseController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @throws AuthorizationException
      */
     public function show(Course $course): Response
     {
         $this->authorize('courses.view', $course);
 
+        //dd(Course::with(['type'])->find($course->id));
+
         return Inertia::render('Admin/Course/Show', [
-            'course' => $course,
+            'course' => Course::with(['courseType'])->find($course->id),
             'can' => [
                 'delete' => Auth::user()->can('courses.delete'),
                 'update' => Auth::user()->can('courses.update'),
@@ -84,8 +81,6 @@ class CourseController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @throws AuthorizationException
      */
     public function edit(Course $course): Response
     {
@@ -93,13 +88,12 @@ class CourseController extends Controller
 
         return Inertia::render('Admin/Course/Edit', [
             'course' => $course,
+            'types' => CourseType::getToForm()
         ]);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @throws AuthorizationException
      */
     public function update(UpdateCourseRequest $request, Course $course): RedirectResponse
     {
@@ -117,8 +111,6 @@ class CourseController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @throws AuthorizationException
      */
     public function destroy(Course $course): RedirectResponse
     {

@@ -6,6 +6,7 @@ use App\Traits\CreatedAndUpdatedTz;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Spatie\Activitylog\LogOptions;
@@ -16,7 +17,7 @@ class Course extends Model
     use HasFactory, LogsActivity, CreatedAndUpdatedTz;
 
     protected $fillable = [
-        'name', 'cod', 'status'
+        'name', 'cod', 'status', 'course_type_id'
     ];
 
     protected $casts = [
@@ -29,7 +30,8 @@ class Course extends Model
             ->logOnly([
                 'name',
                 'cod',
-                'status'
+                'status',
+                'course_type_id'
             ])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
@@ -38,6 +40,11 @@ class Course extends Model
     public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
+    }
+
+    public function courseType(): BelongsTo
+    {
+        return $this->belongsTo(CourseType::class);
     }
 
     public function scopeSearch(Builder $query, Request $request): array

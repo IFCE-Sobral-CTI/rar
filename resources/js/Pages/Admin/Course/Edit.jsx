@@ -4,12 +4,13 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Panel from "@/Components/Dashboard/Panel";
 import Form from "./Components/Form";
 
-function Edit({ course }) {
+function Edit({ course, types }) {
     const { data, setData, put, processing, errors } = useForm({
         cod: course.cod,
         name: course.name,
         status: course.status? 1: 0,
         id: course.id,
+        course_type_id: course.course_type_id
     });
 
     const onHandleChange = (event) => {
@@ -26,7 +27,14 @@ function Edit({ course }) {
             <Head title="Editar curso" />
             <AuthenticatedLayout titleChildren={'Editar curso'} breadcrumbs={[{ label: 'Curso', url: route('courses.index') }, { label: course.name, url: route('courses.show', course.id) }, { label: 'Editar'}]}>
                 <Panel>
-                    <Form data={data} errors={errors} processing={processing} onHandleChange={onHandleChange} handleSubmit={handleSubmit} />
+                    <Form
+                        data={data}
+                        errors={errors}
+                        processing={processing}
+                        onHandleChange={onHandleChange}
+                        handleSubmit={handleSubmit}
+                        types={types}
+                    />
                 </Panel>
             </AuthenticatedLayout>
         </>

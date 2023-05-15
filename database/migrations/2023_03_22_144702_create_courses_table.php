@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('cod', 5);
             $table->boolean('status')->default(true);
+            $table->foreignId('course_type_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

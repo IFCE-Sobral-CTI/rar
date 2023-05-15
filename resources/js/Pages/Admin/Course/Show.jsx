@@ -7,6 +7,19 @@ import DeleteModal from "@/Components/Dashboard/DeleteModal";
 import ShowField from "@/Components/Dashboard/ShowField";
 
 function Show({ course, can }) {
+    const status = (status) => {
+        let className = 'py-1 px-2 rounded-md text-sm text-white';
+        if (status) {
+            className += ' bg-green-500';
+        } else {
+            className += ' bg-red-500';
+        }
+
+        return (
+            <span className={className}>{status == '1' ? 'Ativo' : 'Inativo'}</span>
+        )
+    }
+
     return (
         <>
             <Head title="Detalhes do curso" />
@@ -14,6 +27,8 @@ function Show({ course, can }) {
                 <Panel className={'flex flex-col gap-4'}>
                     <ShowField label={'Código'} value={course.cod} />
                     <ShowField label={'Nome'} value={course.name} />
+                    <ShowField label={'Tipo do curso'} value={course.course_type.description} />
+                    <ShowField label={'Situação'} value={status(course.status)} />
                     <ShowField label={'Criado em'} value={course.created_at} />
                     <ShowField label={'Atualizado em'} value={course.updated_at} />
                 </Panel>

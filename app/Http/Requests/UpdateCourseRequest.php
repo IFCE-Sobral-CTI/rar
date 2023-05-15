@@ -24,7 +24,8 @@ class UpdateCourseRequest extends FormRequest
         return [
             'name' => 'required|min:3',
             'cod' => 'required|digits:5|unique:courses,cod,'.$this->course->id,
-            'status' => 'required|boolean'
+            'status' => 'required|boolean',
+            'course_type_id' => 'required|exists:course_types,id',
         ];
     }
 }

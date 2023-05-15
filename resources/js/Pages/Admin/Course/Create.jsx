@@ -4,11 +4,12 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Panel from "@/Components/Dashboard/Panel";
 import Form from "./Components/Form";
 
-function Create() {
+function Create({ types }) {
     const { data, setData, post, processing, errors } = useForm({
         cod: '',
         name: '',
         status: '',
+        course_type_id: ''
     });
 
     const onHandleChange = (event) => {
@@ -25,7 +26,14 @@ function Create() {
             <Head title="Novo curso" />
             <AuthenticatedLayout titleChildren={'Cadastro de novo curso'} breadcrumbs={[{ label: 'Curso', url: route('courses.index') }, { label: 'Novo', url: route('courses.create') }]}>
                 <Panel className={'flex-1'}>
-                    <Form data={data} errors={errors} processing={processing} onHandleChange={onHandleChange} handleSubmit={handleSubmit} />
+                    <Form
+                        data={data}
+                        errors={errors}
+                        processing={processing}
+                        onHandleChange={onHandleChange}
+                        handleSubmit={handleSubmit}
+                        types={types}
+                    />
                 </Panel>
             </AuthenticatedLayout>
         </>
