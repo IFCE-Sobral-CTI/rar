@@ -20,6 +20,7 @@ class RuleSeeder extends Seeder
          * @var array $groups
          */
         $groups = [
+            'course_types' => ['group' => Group::firstOrCreate(['description' => 'Tipos de Cursos'])],
             'reports' => [
                 'group' => Group::firstOrCreate(['description' => 'Relatórios']),
                 'only' => [

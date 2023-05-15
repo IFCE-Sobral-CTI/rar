@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             UserSeeder::class,
             StudentSeeder::class,
+            CourseTypeSeeder::class,
             CourseSeeder::class,
             EnrollmentSeeder::class,
             RequirementTypeSeeder::class,

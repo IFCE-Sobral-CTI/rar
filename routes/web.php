@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\RequirementController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\CourseTypeController;
 use App\Http\Controllers\Admin\DispatchController;
 use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\GroupController;
@@ -60,6 +61,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
     Route::resource('faqs', FaqController::class);
 
     Route::resource('students', StudentController::class);
+    Route::resource('courses/types', CourseTypeController::class)->names('course_types');
     Route::resource('courses', CourseController::class);
     Route::resource('students.enrollments', EnrollmentController::class);
     Route::resource('requirement/types', RequirementTypeController::class);
