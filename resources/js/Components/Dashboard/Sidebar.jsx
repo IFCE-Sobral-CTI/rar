@@ -22,6 +22,7 @@ function Sidebar({ can }) {
         route().current('weekdays.*') ||
         route().current('students.*') ||
         route().current('courses.*') ||
+        route().current('course_types.*') ||
         route().current('semesters.*')
     );
 
@@ -79,7 +80,7 @@ function Sidebar({ can }) {
                         Principal
                     </Link>
 
-                    {(can.students_viewAny || can.courses_viewAny || can.weekdays_viewAny || can.semesters_viewAny) && <>
+                    {(can.students_viewAny || can.courses_viewAny || can.weekdays_viewAny || can.semesters_viewAny || can.course_types_viewAny) && <>
                         <button
                             className={
                                 (
@@ -137,6 +138,15 @@ function Sidebar({ can }) {
                                     <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
                                 </svg>
                                 Cursos
+                            </Link>}
+                            {can.course_types_viewAny && <Link
+                                href={route('course_types.index', {term: '', page: 1})}
+                                className={(route().current('course_types.*')? 'bg-gray-50 shadow-md ': '') + `text-gray-600 p-3 rounded-lg hover:bg-white hover:shadow-md transition flex gap-4`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512" className="h-5 w-5">
+                                    <path fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="32" d="M48 336v96a48.14 48.14 0 0 0 48 48h320a48.14 48.14 0 0 0 48-48v-96"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M48 336h144m128 0h144m-272 0a64 64 0 0 0 128 0"/><path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" d="M384 32H128c-26 0-43 14-48 40L48 192v96a48.14 48.14 0 0 0 48 48h320a48.14 48.14 0 0 0 48-48v-96L432 72c-5-27-23-40-48-40Z"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M48 192h144m128 0h144m-272 0a64 64 0 0 0 128 0"/>
+                                </svg>
+                                Tipos de Cursos
                             </Link>}
                             {can.weekdays_viewAny && <Link
                                 href={route('weekdays.index', {term: '', page: 1})}
