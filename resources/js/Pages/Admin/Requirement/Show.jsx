@@ -48,6 +48,7 @@ function Show({ requirement, can }) {
                     <ShowField label={'Situação'} value={<Status value={requirement.status} />} />
                     <ShowField label={'Tipo de requerimento'} value={requirement.requirement_type.description} />
                     <ShowField label={'Dias de aulas'} value={weekdays(requirement.weekdays)} />
+                    <ShowField label={'Semestre'} value={requirement.semester.description} />
                     <ShowField label={'Criado em'} value={requirement.created_at} />
                     <ShowField label={'Atualizado em'} value={requirement.updated_at} />
                 </Panel>
