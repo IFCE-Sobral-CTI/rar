@@ -94,4 +94,54 @@ class Dispatch extends Model
             'dispatches' => $dispatch->orderBy('status', 'ASC')->paginate(8),
         ];
     }
+
+    /**
+     * Retorna a quantidade de despachos feitos no semestre atual
+     *
+     * @param Builder $query
+     * @return integer
+     */
+    public function scopeGetCount(Builder $query): int
+    {
+        return $query->whereHas('requirement', function($query) {
+            $query->whereHas('semester', function($query) {
+                $query->where('start', '<=', now())->where('end', '>=', now());
+            });
+        })->count();
+    }
+
+    public function scopeGetDataForChart(Builder $query): array
+    {
+        $to_analyze = self::whereHas('requirement', function($query) {
+            $query->where('status', self::TO_ANALYZE);
+        })->count();
+
+        $deferred = self::whereHas('requirement', function($query) {
+            $query->where('status', self::DEFERRED);
+        })->count();
+
+        $rejected = self::whereHas('requirement', function($query) {
+            $query->where('status', self::REJECTED);
+        })->count();
+
+        $result['labels'] = ['Para analise', 'Deferido', 'Indeferido'];
+
+        $result['datasets'][] = [
+            'label' => 'Qtd',
+            'backgroundColor' => [
+                'rgba(255, 206, 86, 0.75)', // Yellow
+                'rgba(75, 192, 192, 0.75)', // Green
+                'rgba(255, 99, 132, 0.75)', // Red
+            ],
+            'borderColor' => [
+                'rgba(255, 206, 86, 1)', // Yellow
+                'rgba(75, 192, 192, 1)', // Green
+                'rgba(255, 99, 132, 1)', // Red
+            ],
+            'borderWidth' => 1,
+            'data' => [$to_analyze, $deferred, $rejected]
+        ];
+
+        return $result;
+    }
 }

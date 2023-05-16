@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedAndUpdatedTz;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -90,5 +92,129 @@ class Requirement extends Model
             'page' => $request->page?? 1,
             'termSearch' => $request->term,
         ];
+    }
+
+    public function scopeGetCount(Builder $query): int
+    {
+        return $query->whereHas('semester', function($query) {
+            $query->where('start', '<=', now())->where('end', '>=', now());
+        })->count();
+    }
+
+    public function scopeGetRenovationsCount(Builder $query): int
+    {
+        return $query->whereHas('requirementType', function($query) {
+            $query->where('description', 'Renovação');
+        })
+            ->whereHas('semester', function($query) {
+                $query->where('start', '<=', now())->where('end', '>=', now());
+            })
+            ->count();
+    }
+
+    public function scopeGetReprintCount(Builder $query): int
+    {
+        return $query->whereHas('requirementType', function($query) {
+            $query->where('description', 'Segunda via');
+        })->whereHas('semester', function($query) {
+            $query->where('start', '<=', now())->where('end', '>=', now());
+        })->count();
+    }
+
+    public function scopeGetFirstCopyCount(Builder $query): int
+    {
+        return $query->whereHas('requirementType', function($query) {
+            $query->where('description', 'Primeira via');
+        })->whereHas('semester', function($query) {
+            $query->where('start', '<=', now())->where('end', '>=', now());
+        })->count();
+    }
+
+    public function scopeGetDataOfRenovationsForChart(Builder $query): array
+    {
+        $renovations = $query->whereHas('requirementType', function($query) {
+            $query->where('description', 'Renovação');
+        })
+            ->whereHas('semester', function($query) {
+                $query->where('start', '<=', now())->where('end', '>=', now());
+            })
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->take(5)
+            ->get();
+
+        foreach($renovations as $renovation) {
+            $result['labels'][] = Carbon::parse($renovation->date)->format('d/m/Y');
+            $data[] = $renovation->count;
+        }
+
+        $result['datasets'][] = [
+            'elements' => ['bar' => ['borderWidth' => 2]],
+            'label' => 'Data',
+            'backgroundColor' => 'rgba(255, 199, 32, 0.75)',
+            'borderColor' => 'rgba(255, 199, 32, 1)',
+            'data' => $data?? []
+        ];
+
+        return $result;
+    }
+
+    public function scopeGetDataOfFirstCopyForChart(Builder $query): array
+    {
+        $renovations = $query->whereHas('requirementType', function($query) {
+            $query->where('description', 'Primeira via');
+        })
+            ->whereHas('semester', function($query) {
+                $query->where('start', '<=', now())->where('end', '>=', now());
+            })
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->take(5)
+            ->get();
+
+        foreach($renovations as $renovation) {
+            $result['labels'][] = Carbon::parse($renovation->date)->format('d/m/Y');
+            $data[] = $renovation->count;
+        }
+
+        $result['datasets'][] = [
+            'label' => 'Data',
+            'backgroundColor' => 'rgba(105, 119, 192, 1)',
+            'borderColor' => 'rgba(105, 119, 192, 0.25)',
+            'data' => $data?? []
+        ];
+
+        return $result;
+    }
+
+    public function scopeGetDataOfReprintForChart(Builder $query): array
+    {
+        $renovations = $query->whereHas('requirementType', function($query) {
+            $query->where('description', 'Segunda via');
+        })
+            ->whereHas('semester', function($query) {
+                $query->where('start', '<=', now())->where('end', '>=', now());
+            })
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->take(5)
+            ->get();
+
+        foreach($renovations as $renovation) {
+            $result['labels'][] = Carbon::parse($renovation->date)->format('d/m/Y');
+            $data[] = $renovation->count;
+        }
+
+        $result['datasets'][] = [
+            'label' => 'Data',
+            'backgroundColor' => 'rgba(255, 19, 32, 1)',
+            'borderColor' => 'rgba(255, 19, 32, 0.25)',
+            'data' => $data?? []
+        ];
+
+        return $result;
     }
 }

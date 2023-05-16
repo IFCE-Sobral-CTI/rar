@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedAndUpdatedTz;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -85,5 +87,52 @@ class Report extends Model
             ],
             'user'
         ])->findOrFail($report->id);
+    }
+
+    public function scopeGetRequirementCount(Builder $query): int
+    {
+        $counter = 0;
+
+        foreach($query->get() as $item)
+            $counter += $item->dispatches()->whereHas('requirement', function($query) {
+                $query->whereHas('semester', function($query) {
+                    $query->where('start', '<=', now())->where('end', '>=', now());
+                });
+            })->count();
+
+        return $counter;
+    }
+
+    public function scopeGetPrinted(Builder $query): int
+    {
+        return $query->where('printed', true)->count();
+    }
+
+    public function scopeGetDataForChart(Builder $query): array
+    {
+        $reports = $query->whereHas('dispatches', function($query) {
+            $query->whereHas('requirement', function($query) {
+                $query->whereHas('semester', function($query) {
+                    $query->where('start', '<=', now())->where('end', '>=', now());
+                });
+            });
+        })
+            ->orderBy('created_at', 'asc')
+            ->take(5)
+            ->get();
+
+        foreach($reports as $report) {
+            $result['labels'][] = Carbon::parse(strtotime($report->created_at))->format('d/m/Y');
+            $data[] = $report->dispatches()->count();
+        }
+
+        $result['datasets'][] = [
+            'label' => 'Data',
+            'backgroundColor' => 'rgba(255, 199, 32, 0.75)',
+            'borderColor' => 'rgba(255, 199, 32, 1)',
+            'data' => $data?? []
+        ];
+
+        return $result;
     }
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -69,5 +70,12 @@ class PrintQueue extends Model
                 'user'
             ]
         ])->findOrFail($printQueue->id);
+    }
+
+    public function scopeGetDataForDashboardChart(Builder $query): Collection
+    {
+        $query->with(['dispatch' => ['requirement' => ['enrollment' => ['student', 'course'], 'requirementType'], 'user']]);
+
+        return $query->get()->take(5);
     }
 }
