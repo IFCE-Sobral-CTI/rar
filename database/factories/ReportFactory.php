@@ -20,6 +20,7 @@ class ReportFactory extends Factory
         return [
             'user_id' => User::all()->random()->id,
             'printed' => !rand(0, 1),
+            'created_at' => fake()->dateTimeBetween('2023-05-10'),
         ];
     }
 }
