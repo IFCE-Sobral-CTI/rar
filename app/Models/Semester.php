@@ -59,4 +59,9 @@ class Semester extends Model
             ];
         });
     }
+
+    public function scopeGetCurrent(Builder $query)
+    {
+        return $query->where('start', '<=', now())->where('end', '>=', now())->first();
+    }
 }
