@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\LevelOfEducation;
 use App\Traits\CreatedAndUpdatedTz;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -216,5 +217,82 @@ class Requirement extends Model
         ];
 
         return $result;
+    }
+
+    public function scopeGetDataByCourseForChart(Builder $query): array
+    {
+        $higher = self::whereHas('semester', function($query) {
+            $query->where('start', '<=', now())->where('end', '>=', now());
+        })->whereHas('enrollment', function($query) {
+            $query->whereHas('course', function($query) {
+                $query->whereHas('courseType', function($query) {
+                    $query->where('level', LevelOfEducation::higher->value);
+                });
+            });
+        })->count();
+
+        $technical = self::whereHas('semester', function($query) {
+            $query->where('start', '<=', now())->where('end', '>=', now());
+        })->whereHas('enrollment', function($query) {
+            $query->whereHas('course', function($query) {
+                $query->whereHas('courseType', function($query) {
+                    $query->where('level', LevelOfEducation::technical->value);
+                });
+            });
+        })->count();
+
+        $result['labels'] = ['Técnico', 'Superior'];
+
+        $result['datasets'][] = [
+            'label' => 'Qtd',
+            'backgroundColor' => [
+                'rgba(54, 162, 235, 0.75)',
+                'rgba(75, 192, 192, 0.75)'
+            ],
+            'borderColor' => [
+                'rgba(54, 162, 235, 1)',
+                'rgba(75, 192, 192, 1)'
+            ],
+            'borderWidth' => 1,
+            'data' => [$technical, $higher]
+        ];
+
+        return $result;
+    }
+
+    public function scopeReports(Builder $query, Request $request): array
+    {
+        $query->with(['enrollment' => ['student'], 'semester', 'requirementType', 'weekdays']);
+
+        $query->when($request->status, function($query) use ($request) {
+            return $query->where('status', $request->status);
+        });
+
+        $query->when($request->type, function($query) use ($request) {
+            return $query->whereHas('requirementType', function($query) use ($request) {
+                return $query->where('id', $request->type);
+            });
+        });
+
+        $query->when($request->course, function($query) use ($request) {
+            return$query->whereHas('enrollment', function($query) use  ($request) {
+                return $query->whereHas('course', function($query) use ($request) {
+                    return $query->whereHas('courseType', function($query) use ($request) {
+                        return $query->where('level', $request->course);
+                    });
+                });
+            });
+        });
+
+        $query->when($request->semester, function($query) use ($request) {
+            return $query->whereHas('semester', function($query) use ($request) {
+                return $query->where('id', $request->semester);
+            });
+        });
+
+        return [
+            'count' => $query->count(),
+            'requirements' => $query->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10)),
+        ];
     }
 }
