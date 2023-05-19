@@ -20,9 +20,13 @@ class RuleSeeder extends Seeder
          * @var array $groups
          */
         $groups = [
+            'requirement_reports' => [
+                'group' => Group::firstOrCreate(['description' => 'Relatórios de Requerimentos']),
+                'only' => ['Página inicial' => 'viewAny'],
+            ],
             'course_types' => ['group' => Group::firstOrCreate(['description' => 'Tipos de Cursos'])],
             'reports' => [
-                'group' => Group::firstOrCreate(['description' => 'Relatórios']),
+                'group' => Group::firstOrCreate(['description' => 'Relatórios de Impressão']),
                 'only' => [
                     'Página inicial' => 'viewAny',
                     'Detalhes' => 'view',
