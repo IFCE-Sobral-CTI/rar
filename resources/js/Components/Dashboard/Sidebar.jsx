@@ -28,7 +28,8 @@ function Sidebar({ can }) {
 
     const [requirementsCollapse] = useState(
         route().current('requirements.*') ||
-        route().current('types.*')
+        route().current('types.*') ||
+        route().current('requirement_reports.*')
     );
 
     const [printQueueCollapse] = useState(
@@ -89,7 +90,6 @@ function Sidebar({ can }) {
                                     : ''
                                 ) + `text-gray-600 p-3 rounded-lg hover:bg-white hover:shadow-md transition flex items-center gap-4 focus:ring-0`}
                             type="button"
-
                             data-te-collapse-init
                             data-te-target="#schoolCollapse"
                             aria-controls="schoolCollapse"
@@ -176,7 +176,7 @@ function Sidebar({ can }) {
                     </>}
 
 
-                    {(can.requirements_viewAny || can.types_viewAny) && <>
+                    {(can.requirements_viewAny || can.types_viewAny || can.requirement_reports_viewAny) && <>
                         <button
                             className={
                                 (
@@ -233,6 +233,16 @@ function Sidebar({ can }) {
                                     <path fillRule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
                                 </svg>
                                 Tipos de Requerimento
+                            </Link>}
+                            {can.requirement_reports_viewAny && <Link
+                                href={route('requirement_reports.index')}
+                                className={(route().current('requirement_reports.*')? 'bg-gray-50 shadow-md ': '') + `text-gray-600 p-3 rounded-lg hover:bg-white hover:shadow-md transition flex gap-4`}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" className="h-5 w-5">
+                                    <path fill="currentColor" d="M10 18h8v2h-8zm0-5h12v2H10zm0 10h5v2h-5z"/>
+                                    <path fill="currentColor" d="M25 5h-3V4a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v1H7a2 2 0 0 0-2 2v21a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2ZM12 4h8v4h-8Zm13 24H7V7h3v3h12V7h3Z"/>
+                                </svg>
+                                Relatórios
                             </Link>}
                         </div>
                     </>}
