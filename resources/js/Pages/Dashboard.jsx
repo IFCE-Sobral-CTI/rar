@@ -28,7 +28,7 @@ ChartJS.register(
     Legend
 );
 
-export default function Dashboard({ print_queue, print, can, semester, requirements, dispatches, courses }) {
+export default function Dashboard({ print_queue, print, can, semester, requirements, dispatches }) {
     console.log(requirements.renovationsChart)
     return (
         <>
@@ -111,7 +111,7 @@ export default function Dashboard({ print_queue, print, can, semester, requireme
                     </Panel>
                 </div>
                 <div className="grid grid-cols-5 grid-rows-1 gap-4">
-                    <Panel className="col-span-2">
+                    <Panel className="col-span-2 h-96 flex justify-center items-center">
                         <Doughnut
                             options={{
                                 responsive: true,
@@ -125,10 +125,10 @@ export default function Dashboard({ print_queue, print, can, semester, requireme
                                     },
                                 },
                             }}
-                            data={courses.chart}
+                            data={requirements.courses}
                         />
                     </Panel>
-                    <Panel className="col-span-2">
+                    <Panel className="col-span-2 h-96 flex justify-center items-center">
                         <Doughnut
                             options={{
                                 responsive: true,
