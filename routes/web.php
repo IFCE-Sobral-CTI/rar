@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\RuleController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\PrintQueueController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\RequirementReportController;
 use App\Http\Controllers\Admin\RequirementTypeController;
 use App\Http\Controllers\Admin\SemesterController;
 use App\Http\Controllers\Admin\WeekdayController;
@@ -68,6 +69,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
     Route::resource('semesters', SemesterController::class);
     Route::resource('weekdays', WeekdayController::class);
     Route::resource('requirements', RequirementController::class);
+    Route::get('reports/requirements', [RequirementReportController::class, 'index'])->name('requirement_reports.index');
     Route::resource('requirements.dispatches', DispatchController::class);
     Route::resource('print/queues', PrintQueueController::class)
         ->only(['index', 'show', 'destroy'])
