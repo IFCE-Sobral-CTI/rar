@@ -32,7 +32,7 @@ function Index({ requirements, can, request, data }) {
 
     useEffect(() => {
         const debounce = setTimeout(() => {
-            router.visit(route(route().current()), {data: {status, type, course, semester}, preserveState: true, replace: true});
+            router.visit(route(route().current()), {data: {status, type, course, semester, page: request.page}, preserveState: true, replace: true});
         }, 300);
 
         if (status || type || course || semester)
@@ -89,7 +89,7 @@ function Index({ requirements, can, request, data }) {
                         <h2 className="text-xl text-neutral-500 font-semibold">Filtros</h2>
                         {trash &&
                             <Link
-                                href={route('requirement_reports.index')}
+                                href={route('requirement_reports.index', {status: '', type: '', course: '', semester: '', page: request.page?? ''})}
                                 className="flex px-1 gap-1 items-center border border-transparent text-sm rounded-lg text-white transition ease-in-out duration-150 focus:ring-2 bg-red-500 hover:bg-red-600 focus:ring-red-300"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16" className="w-3 h-3">
@@ -153,7 +153,9 @@ function Index({ requirements, can, request, data }) {
                             {table}
                         </tbody>
                     </table>
-                    <Pagination data={requirements.requirements} count={requirements.count} />
+                    <Pagination data={requirements.requirements} count={requirements.count}>
+
+                    </Pagination>
                 </Panel>
             </AuthenticatedLayout>
         </>
