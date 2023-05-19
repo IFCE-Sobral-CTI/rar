@@ -292,7 +292,12 @@ class Requirement extends Model
 
         return [
             'count' => $query->count(),
-            'requirements' => $query->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10)),
+            'requirements' => $query->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10))->appends([
+                'status' => $request->status,
+                'type' => $request->type,
+                'course' => $request->course,
+                'semester' => $request->semester,
+            ]),
         ];
     }
 }
