@@ -33,6 +33,7 @@ class HomeController extends Controller
                 'first_copy' => Requirement::getFirstCopyCount(),
                 'first_copy_chart' => Requirement::getDataOfFirstCopyForChart(),
                 'count' => Requirement::getCount(),
+                'courses' => Requirement::getDataByCourseForChart()
             ],
             'dispatches' => [
                 'count' => Dispatch::getCount(),
@@ -48,9 +49,6 @@ class HomeController extends Controller
                 'chart' => Report::getDataForChart(),
             ],
             'semester' => Semester::getCurrent(),
-            'courses' => [
-                'chart' => Course::getDataForChart()
-            ]
         ]);
     }
 }
