@@ -61,34 +61,4 @@ class Course extends Model
             'termSearch' => $request->term,
         ];
     }
-
-    public function scopeGetDataForChart(Builder $query): array
-    {
-        $higher = self::whereHas('courseType', function($query) {
-            $query->where('level', LevelOfEducation::higher->value);
-        })->count();
-
-
-        $technical = self::whereHas('courseType', function($query) {
-            $query->where('level', LevelOfEducation::technical->value);
-        })->count();
-
-        $result['labels'] = ['Técnico', 'Superior'];
-
-        $result['datasets'][] = [
-            'label' => 'Qtd',
-            'backgroundColor' => [
-                'rgba(54, 162, 235, 0.75)',
-                'rgba(75, 192, 192, 0.75)'
-            ],
-            'borderColor' => [
-                'rgba(54, 162, 235, 1)',
-                'rgba(75, 192, 192, 1)'
-            ],
-            'borderWidth' => 1,
-            'data' => [$technical, $higher]
-        ];
-
-        return $result;
-    }
 }
