@@ -32,8 +32,8 @@ class RequirementController extends Controller
 
         return Inertia::render('Admin/Requirement/Index', array_merge(Requirement::search($request), [
             'can' => [
-                'view' => Auth::user()->can('requirements.view'),
-                'create' => Auth::user()->can('requirements.create'),
+                'view' => $request->user()->can('requirements.view'),
+                'create' => $request->user()->can('requirements.create'),
             ]
         ]));
     }
@@ -80,7 +80,7 @@ class RequirementController extends Controller
      *
      * @throws AuthorizationException
      */
-    public function show(Requirement $requirement): Response
+    public function show(Request $request, Requirement $requirement): Response
     {
         $this->authorize('requirements.view', $requirement);
 
@@ -89,9 +89,9 @@ class RequirementController extends Controller
         return Inertia::render('Admin/Requirement/Show', [
             'requirement' => $requirement,
             'can' => [
-                'delete' => Auth::user()->can('requirements.delete'),
-                'update' => Auth::user()->can('requirements.update'),
-                'dispatches' => Auth::user()->can('dispatches.index'),
+                'delete' => $request->user()->can('requirements.delete'),
+                'update' => $request->user()->can('requirements.update'),
+                'dispatches' => $request->user()->can('dispatches.index'),
             ]
         ]);
     }
