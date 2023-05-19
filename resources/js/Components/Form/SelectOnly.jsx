@@ -72,8 +72,8 @@ function SelectOnly({ data, onChange, error, value, label, name }) {
             <div className="flex border border-neutral-400 rounded-lg p-2" onClick={toggleHandle}>
                 <div className="flex-1">
                     {selected.id != null
-                    ?<span className="text-neutral-700 font-normal">{selected.name}</span>
-                    :<span className="text-neutral-500">Nenhum {label.toLowerCase()} selecionado</span>}
+                    ?<span className="text-neutral-700 font-normal text-clip overflow-hidden">{selected.name}</span>
+                    :<span className="text-neutral-500 text-clip overflow-hidden">Nenhum valor selecionado</span>}
                 </div>
                 <div className="flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
