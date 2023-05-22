@@ -21,6 +21,18 @@ enum LevelOfEducation: int
         };
     }
 
+    public static function get(int $value)
+    {
+        return match($value) {
+            static::child->value => 'Infantil',
+            static::fundamental->value => 'Fundamental',
+            static::middle->value => 'Médio',
+            static::technical->value => 'Técnico',
+            static::higher->value => 'Superior',
+            default => null,
+        };
+    }
+
     public static function toArray(): array
     {
         foreach(static::cases() as $case)
