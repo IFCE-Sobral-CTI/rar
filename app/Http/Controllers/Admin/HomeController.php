@@ -33,7 +33,8 @@ class HomeController extends Controller
                 'first_copy' => Requirement::getFirstCopyCount(),
                 'first_copy_chart' => Requirement::getDataOfFirstCopyForChart(),
                 'count' => Requirement::getCount(),
-                'courses' => Requirement::getDataByCourseForChart()
+                'courses' => Requirement::getDataByCourseForChart(),
+                'status_chart' => Requirement::getDataByStatusForChart(),
             ],
             'dispatches' => [
                 'count' => Dispatch::getCount(),
