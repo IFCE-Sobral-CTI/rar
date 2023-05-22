@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\RequirementType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequirementRequest extends FormRequest
@@ -21,12 +22,17 @@ class UpdateRequirementRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'status' => 'required|in:1,2,3',
             'enrollment_id' => 'required|exists:enrollments,id',
             'semester_id' => 'required|exists:semesters,id',
             'requirement_type_id' => 'required|exists:requirement_types,id',
             'weekdays.*' => 'exists:weekdays,id'
         ];
+
+        if (RequirementType::where('description', 'Segunda via')->first())
+            $rules['justification'] = 'required';
+
+        return $rules;
     }
 }
