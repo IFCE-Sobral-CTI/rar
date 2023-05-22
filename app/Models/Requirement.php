@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -260,7 +261,45 @@ class Requirement extends Model
         return $result;
     }
 
-    public function scopeReports(Builder $query, Request $request): array
+    public function scopeGetDataByStatusForChart(Builder $query): array
+    {
+        $to_analyze = self::where('status', self::TO_ANALYZE)
+            ->whereHas('semester', function($query) {
+                $query->where('start', '<=', now())->where('end', '>=', now());
+            })->count();
+
+        $deferred = self::where('status', self::DEFERRED)
+            ->whereHas('semester', function($query) {
+                $query->where('start', '<=', now())->where('end', '>=', now());
+            })->count();
+
+        $rejected = self::where('status', self::REJECTED)
+            ->whereHas('semester', function($query) {
+                $query->where('start', '<=', now())->where('end', '>=', now());
+            })->count();
+
+        $result['labels'] = ['Para analise', 'Deferido', 'Indeferido'];
+
+        $result['datasets'][] = [
+            'label' => 'Qtd',
+            'backgroundColor' => [
+                'rgba(255, 206, 86, 0.75)', // Yellow
+                'rgba(75, 192, 192, 0.75)', // Green
+                'rgba(255, 99, 132, 0.75)', // Red
+            ],
+            'borderColor' => [
+                'rgba(255, 206, 86, 1)', // Yellow
+                'rgba(75, 192, 192, 1)', // Green
+                'rgba(255, 99, 132, 1)', // Red
+            ],
+            'borderWidth' => 1,
+            'data' => [$to_analyze, $deferred, $rejected]
+        ];
+
+        return $result;
+    }
+
+    public function scopeReports(Builder $query, Request $request, bool $print = false): array|Collection
     {
         $query->with(['enrollment' => ['student'], 'semester', 'requirementType', 'weekdays']);
 
@@ -290,6 +329,10 @@ class Requirement extends Model
             });
         });
 
+        // Dados para impressão
+        if ($print)
+            return  $query->orderBy('status', 'ASC')->get();
+
         return [
             'count' => $query->count(),
             'requirements' => $query->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10))->appends([
@@ -299,5 +342,35 @@ class Requirement extends Model
                 'semester' => $request->semester,
             ]),
         ];
+    }
+
+    public function scopeGetDescriptionFiltersForPrint(Builder $query, Request $request): array
+    {
+        $status = $request->status? match((int)$request->status) {
+            self::TO_ANALYZE => 'Para analise',
+            self::DEFERRED => 'Deferido',
+            self::REJECTED => 'Indeferido',
+            default => null,
+        }: null;
+
+        $course = $request->course? LevelOfEducation::get($request->course): null;
+        $semester = Semester::where('id', $request->semester)->first()?->description;
+        $type = RequirementType::where('id', $request->type)->first()?->description;
+
+        return [
+            'status' => $status,
+            'semester' => $semester,
+            'course' => $course,
+            'type' => $type,
+        ];
+    }
+
+    public function getStatus(): string
+    {
+        return match($this->status) {
+            self::TO_ANALYZE => 'Para analise',
+            self::DEFERRED => 'Deferido',
+            self::REJECTED => 'Indeferido',
+        };
     }
 }
