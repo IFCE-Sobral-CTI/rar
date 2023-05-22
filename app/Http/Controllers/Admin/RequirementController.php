@@ -48,10 +48,11 @@ class RequirementController extends Controller
         $this->authorize('requirements.create', Requirement::class);
 
         return Inertia::render('Admin/Requirement/Create', [
-            'enrollments' => Enrollment::getDataForSelectInput(),
+            'enrollments' => fn () => Enrollment::getDataForSelectInput(),
             'requirement_types' => RequirementType::getDataForSelectInput(),
             'weekdays' => Weekday::getDataForSelectInput(),
             'semesters' => Semester::getDataForSelectInput(),
+            'reprint_type' => RequirementType::where('description', 'Segunda via')->first()->id
         ]);
     }
 
@@ -65,7 +66,7 @@ class RequirementController extends Controller
         $this->authorize('requirements.create', Requirement::class);
 
         try {
-            $requirement = Requirement::create($request->only(['status', 'semester_id', 'enrollment_id', 'requirement_type_id']));
+            $requirement = Requirement::create($request->only(['status', 'semester_id', 'enrollment_id', 'requirement_type_id', 'justification']));
             $requirement->weekdays()->sync($request->weekday);
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -109,10 +110,11 @@ class RequirementController extends Controller
 
         return Inertia::render('Admin/Requirement/Edit', [
             'requirement' => $requirement,
-            'enrollments' => Enrollment::getDataForSelectInput(),
+            'enrollments' => fn () => Enrollment::getDataForSelectInput(),
             'requirement_types' => RequirementType::getDataForSelectInput(),
             'weekdays' => Weekday::getDataForSelectInput(),
             'semesters' => Semester::getDataForSelectInput(),
+            'reprint_type' => RequirementType::where('description', 'Segunda via')->first()->id
         ]);
     }
 
