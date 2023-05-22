@@ -142,7 +142,7 @@ export default function Dashboard({ print_queue, print, can, semester, requireme
                                     },
                                 },
                             }}
-                            data={dispatches.chart}
+                            data={requirements.status_chart}
                         />
                     </Panel>
                     <Panel className="col-span-1 flex flex-col gap-4">
