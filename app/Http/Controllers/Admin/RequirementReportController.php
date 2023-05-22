@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Requirement;
 use App\Models\RequirementType;
 use App\Models\Semester;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,6 +44,17 @@ class RequirementReportController extends Controller
                     ['id' => Requirement::REJECTED, 'name' => 'Indeferido'],
                 ]
             ]
+        ]);
+    }
+
+    public function print(Request $request): View
+    {
+        $this->authorize('requirement_reports.viewAny', Requirement::class);
+
+        return view('printRequirement', [
+            'filters' => Requirement::getDescriptionFiltersForPrint($request),
+            'requirements' => Requirement::reports(request: $request, print: true),
+            'user' => $request->user()->name
         ]);
     }
 }
