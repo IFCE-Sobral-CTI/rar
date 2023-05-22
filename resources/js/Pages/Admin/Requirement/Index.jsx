@@ -41,6 +41,11 @@ function Index({ requirements, count, page, termSearch, can }) {
                         {<Status value={item.status} />}
                     </Link>
                 </td>
+                <td className="px-1 py-3 font-light">
+                    <Link href={can.view? route('requirements.show', item.id): route('requirements.index', {term: term, page: currentPage})}>
+                        {item.semester.description}
+                    </Link>
+                </td>
                 <td className="flex justify-end py-3 pr-2 text-neutral-400">
                     <Link href={can.view? route('requirements.show', item.id): route('requirements.index', {term: term, page: currentPage})}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-5 h-5" viewBox="0 0 16 16">
@@ -85,7 +90,8 @@ function Index({ requirements, count, page, termSearch, can }) {
                                 <th className="px-1 pt-3 font-semibold text-left w-2/12">Tipo</th>
                                 <th className="px-1 pt-3 font-semibold text-left w-2/12">Matricula</th>
                                 <th className="px-1 pt-3 font-semibold text-left w-6/12">Discente</th>
-                                <th className="px-1 pt-3 font-semibold text-left w-2/12">Status</th>
+                                <th className="px-1 pt-3 font-semibold text-left w-1/12">Status</th>
+                                <th className="px-1 pt-3 font-semibold text-left w-1/12">Semestre</th>
                                 <th></th>
                             </tr>
                         </thead>
