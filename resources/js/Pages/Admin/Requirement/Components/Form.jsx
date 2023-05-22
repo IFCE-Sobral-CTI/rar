@@ -2,6 +2,8 @@ import React from "react";
 import Button from "@/Components/Form/Button";
 import SelectOnly from "@/Components/Form/SelectOnly";
 import SelectMulti from "@/Components/Form/SelectMult";
+import Textarea from "@/Components/Form/Textarea";
+import InputError from "@/Components/InputError";
 
 export default function Form({
     data,
@@ -12,7 +14,8 @@ export default function Form({
     enrollments,
     requirement_types,
     weekdays,
-    semesters
+    semesters,
+    reprint_type,
 }) {
     return (
         <form onSubmit={handleSubmit} autoComplete="off">
@@ -38,6 +41,19 @@ export default function Form({
                 name={'requirement_type_id'}
                 required
             />
+            {(reprint_type == data.requirement_type_id) &&
+                <div className="mb-4">
+                    <label htmlFor="justification" className="font-light">Justificativa</label>
+                    <Textarea
+                        name="justification"
+                        value={data.justification}
+                        handleChange={onHandleChange}
+                        required
+                        placeholder="Justificativa para requerimento"
+                    />
+                    <InputError message={errors.justification} />
+                </div>
+            }
             <SelectOnly
                 value={data.semester_id}
                 data={semesters}

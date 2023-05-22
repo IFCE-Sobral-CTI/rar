@@ -9,7 +9,6 @@ import Status from "./Components/Status";
 
 function Show({ requirement, can }) {
     const weekdays = (data) => {
-        console.log("data", data);
         if (!data.length)
             return <>Nenhum dia selecionado.</>;
 
@@ -47,6 +46,7 @@ function Show({ requirement, can }) {
                 <Panel className={'flex flex-col gap-4'}>
                     <ShowField label={'Situação'} value={<Status value={requirement.status} />} />
                     <ShowField label={'Tipo de requerimento'} value={requirement.requirement_type.description} />
+                    <ShowField label={'Justificativa'} value={requirement.justification?? ''} />
                     <ShowField label={'Dias de aulas'} value={weekdays(requirement.weekdays)} />
                     <ShowField label={'Semestre'} value={requirement.semester.description} />
                     <ShowField label={'Criado em'} value={requirement.created_at} />

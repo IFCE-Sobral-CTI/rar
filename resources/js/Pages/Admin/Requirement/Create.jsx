@@ -4,13 +4,13 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Panel from "@/Components/Dashboard/Panel";
 import Form from "./Components/Form";
 
-function Create({ enrollments, requirement_types, weekdays, semesters }) {
+function Create({ enrollments, requirement_types, weekdays, semesters, reprint_type }) {
     const { data, setData, post, processing, errors } = useForm({
         status: '',
         enrollment_id: '',
         requirement_type_id: '',
         semester_id: '',
-        weekday: []
+        weekday: [],
     });
 
     const onHandleChange = (event) => {
@@ -37,6 +37,7 @@ function Create({ enrollments, requirement_types, weekdays, semesters }) {
                         requirement_types={requirement_types}
                         weekdays={weekdays}
                         semesters={semesters}
+                        reprint_type={reprint_type}
                     />
                 </Panel>
             </AuthenticatedLayout>

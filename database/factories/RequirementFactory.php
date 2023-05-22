@@ -19,9 +19,15 @@ class RequirementFactory extends Factory
      */
     public function definition(): array
     {
+        $reqType = RequirementType::all()->random();
+
+        if ($reqType->description == 'Segunda via')
+            $justification = fake()->sentence();
+
         return [
             'status' => rand(1, 3),
-            'requirement_type_id' => RequirementType::all()->random()->id,
+            'justification' => $justification?? null,
+            'requirement_type_id' => $reqType->id,
             'enrollment_id' => Enrollment::all()->random()->id,
             'semester_id' => Semester::all()->random()->id,
             'created_at' => fake()->dateTimeBetween('2023-05-11'),

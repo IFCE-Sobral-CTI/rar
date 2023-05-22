@@ -26,6 +26,7 @@ class Requirement extends Model
     public const REJECTED = 3;
     protected $fillable = [
         'status',
+        'justification',
         'requirement_type_id',
         'enrollment_id',
         'semester_id',
@@ -35,6 +36,7 @@ class Requirement extends Model
     {
         return LogOptions::defaults()
             ->logOnly([
+                'justification',
                 'status',
                 'requirementType.description',
                 'enrollment.name',

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('requirements', function (Blueprint $table) {
             $table->id();
-            $table->smallInteger('status')->default(0); // Em analise
+            $table->smallInteger('status')->default(1); // Em analise
+            $table->text('justification')->nullable(); // Justificativa para segunda via
             $table->foreignId('requirement_type_id')
                 ->constrained()
                 ->onUpdate('cascade')

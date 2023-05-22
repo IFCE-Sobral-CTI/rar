@@ -4,13 +4,14 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Panel from "@/Components/Dashboard/Panel";
 import Form from "./Components/Form";
 
-function Edit({ requirement, enrollments, requirement_types, weekdays, semesters }) {
+function Edit({ requirement, enrollments, requirement_types, weekdays, semesters, reprint_type }) {
     const { data, setData, put, processing, errors } = useForm({
         status: requirement.status,
         enrollment_id: requirement.enrollment_id,
         semester_id: requirement.semester_id,
         requirement_type_id: requirement.requirement_type_id,
-        weekday: requirement.weekdays.map(item => item.id)
+        weekday: requirement.weekdays.map(item => item.id),
+        justification: requirement.justification
     });
 
     const onHandleChange = (event) => {
@@ -37,6 +38,7 @@ function Edit({ requirement, enrollments, requirement_types, weekdays, semesters
                         requirement_types={requirement_types}
                         weekdays={weekdays}
                         semesters={semesters}
+                        reprint_type={reprint_type}
                     />
                 </Panel>
             </AuthenticatedLayout>
