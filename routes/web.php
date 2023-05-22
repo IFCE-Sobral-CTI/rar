@@ -70,6 +70,7 @@ Route::prefix('admin')->middleware(['auth', 'verified'])->group(function() {
     Route::resource('weekdays', WeekdayController::class);
     Route::resource('requirements', RequirementController::class);
     Route::get('reports/requirements', [RequirementReportController::class, 'index'])->name('requirement_reports.index');
+    Route::get('reports/requirements/print', [RequirementReportController::class, 'print'])->name('requirement_reports.print');
     Route::resource('requirements.dispatches', DispatchController::class);
     Route::resource('print/queues', PrintQueueController::class)
         ->only(['index', 'show', 'destroy'])
