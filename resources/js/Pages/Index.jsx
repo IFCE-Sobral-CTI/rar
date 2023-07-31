@@ -111,7 +111,7 @@ export default function Index({semester}) {
                                 <HCaptcha
                                     sitekey="7d7ab47a-b312-4e51-a24f-3f741c63582c"
                                     onVerify={setToken}
-                                    onLoad={onLoad}
+                                    // onLoad={onLoad}
                                     ref={captchaRef}
                                 />
                                 <InputError message={errors.h_captcha_response} className="mt-2" />
