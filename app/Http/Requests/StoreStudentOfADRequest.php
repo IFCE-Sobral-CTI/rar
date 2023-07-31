@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ValidHCaptcha;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreStudentOfADRequest extends FormRequest
@@ -25,6 +26,25 @@ class StoreStudentOfADRequest extends FormRequest
             'cpf' => 'required|cpf',
             'rg' => 'required|numeric',
             'birth' => 'required|date',
+            'h_captcha_response' => ['required', new ValidHCaptcha]
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'cpf' => 'CPF',
+            'rg' => 'R.G.',
+            'birth' => 'data de nascimento',
+            'card' => 'cartão',
+            'h_captcha_response' => 'captcha',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'h_captcha_response.required' => 'O desafio deve ser respondido.'
         ];
     }
 }

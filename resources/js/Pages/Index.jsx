@@ -111,7 +111,7 @@ export default function Index({semester}) {
                                 <HCaptcha
                                     sitekey="7d7ab47a-b312-4e51-a24f-3f741c63582c"
                                     onVerify={setToken}
-                                    // onLoad={onLoad}
+                                    onLoad={onLoad}
                                     ref={captchaRef}
                                 />
                                 <InputError message={errors.h_captcha_response} className="mt-2" />
@@ -124,7 +124,7 @@ export default function Index({semester}) {
                                 className={'flex justify-center items-center gap-2'}
                                 processing={processing}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="w-5 h-5" viewBox="0 0 16 16">
                                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                                 </svg>
                                 <span>Pesquisar</span>
