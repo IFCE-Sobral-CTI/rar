@@ -16,6 +16,13 @@ class CourseSeeder extends Seeder
     {
         Course::insert([
             [
+                'cod' => '00000',
+                'name' => 'Curso não encontrado',
+                'course_type_id' => CourseType::getIdByDescription('Tecnológico'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
                 'cod' => '07333',
                 'name' => 'Tecnologia em Saneamento Ambiental',
                 'course_type_id' => CourseType::getIdByDescription('Tecnológico'),
@@ -144,6 +151,13 @@ class CourseSeeder extends Seeder
             [
                 'cod' => '07500',
                 'name' => 'Bacharelado em Agronomia',
+                'course_type_id' => CourseType::getIdByDescription('Bacharel'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'cod' => '07501',
+                'name' => 'Bacharelado em Engenharia de Controle e Automação',
                 'course_type_id' => CourseType::getIdByDescription('Bacharel'),
                 'created_at' => now(),
                 'updated_at' => now(),

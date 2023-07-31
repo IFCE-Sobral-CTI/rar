@@ -8,7 +8,7 @@ export default function Requirements({ requirement }) {
     console.log(requirement)
     return (
         <HomeLayout>
-            <div className="flex flex-col gap-2 md:gap-4 my-2">
+            <div className="flex flex-col gap-2 my-2 md:gap-4">
                 <Panel className={'flex flex-wrap justify-between gap-2'}>
                     <Header
                         title="Requerimento de Acesso ao Restaurante Acadêmico"
@@ -19,38 +19,38 @@ export default function Requirements({ requirement }) {
                     <h2 className="text-xl font-semibold text-center text-green">Requerimento enviado com sucesso!</h2>
                 </Panel>
                 <Panel className="flex flex-wrap justify-between gap-2">
-                    <div className="flex flex-col gap-2 flex-1">
+                    <div className="flex flex-col flex-1 gap-2">
                         <h1 className="p-2 text-lg font-bold text-center">Dados que serão impressos na cartão usado no Restaurante Acadêmico</h1>
                         <div className="px-2">
                             <p className="font-light border-b">Nome</p>
-                            <p className="font-bold">{requirement.student?.name}</p>
+                            <p className="font-bold">{requirement.enrollment.student.name}</p>
                         </div>
                         <div className="px-2">
                             <p className="font-light border-b">C.P.F.</p>
-                            <p className="font-bold">{requirement.student?.cpf}</p>
+                            <p className="font-bold">{requirement.enrollment.student.cpf}</p>
                         </div>
                         <div className="px-2">
                             <p className="font-light border-b">R.G.</p>
-                            <p className="font-bold">{requirement.student?.rg}</p>
+                            <p className="font-bold">{requirement.enrollment.student.rg}</p>
                         </div>
                         <div className="px-2">
                             <p className="font-light border-b">Matricula</p>
-                            <p className="font-bold">{requirement.enrollment?.number}</p>
+                            <p className="font-bold">{requirement.enrollment.number}</p>
                         </div>
                         <div className="px-2">
                             <p className="font-light border-b">Curso</p>
-                            <p className="font-bold">{requirement.enrollment?.course?.name}</p>
+                            <p className="font-bold">{requirement.enrollment.course.name}</p>
                         </div>
                         <div className="px-2">
                             <p className="font-light border-b">Dias de aulas</p>
                             <div className="flex flex-col gap-2 md:flex-md md:justify-between">
-                                {requirement?.weekdays?.map((item, i) => <span className='flex-1 font-bold' key={i}>{item.name}</span>)}
+                                {requirement.weekdays.map((item, i) => <span className='flex-1 font-bold' key={i}>{item.description}</span>)}
                             </div>
                         </div>
                         <div className="px-2">
                             <p className="font-light border-b">E-mails</p>
-                            <p className="font-bold"><span className="font-light">Pessoal: </span>{requirement.student?.personal_email}</p>
-                            <p className="font-bold"><span className="font-light">Acadêmico: </span>{requirement.student?.academic_email}</p>
+                            <p className="font-bold"><span className="font-light">Pessoal: </span>{requirement.enrollment.student?.personal_email}</p>
+                            <p className="font-bold"><span className="font-light">Acadêmico: </span>{requirement.enrollment.student?.institutional_email}</p>
                         </div>
                     </div>
                 </Panel>

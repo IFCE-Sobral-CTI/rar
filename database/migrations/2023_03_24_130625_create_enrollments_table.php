@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Enrollment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,7 +23,7 @@ return new class extends Migration
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->boolean('status')->default(false);
+            $table->boolean('status')->default(Enrollment::ACTIVE);
             $table->timestamps();
         });
     }

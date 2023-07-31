@@ -42,8 +42,8 @@ use App\Models\Report;
 Route::get('/', [Home::class, 'index'])->name('home');
 Route::post('/matriculas', [Home::class, 'postEnrollments'])->name('home.enrollments.post');
 Route::get('/matriculas/{token}', [Home::class, 'getEnrollments'])->name('home.enrollments.get');
-Route::post('/requerimento', [Home::class, 'postRequirements'])->name('home.requirements.post');
-Route::get('/requerimento/{id}', [Home::class, 'getRequirements'])->name('home.requirements.get');
+Route::post('/requerimento/{token}', [Home::class, 'postRequirements'])->name('home.requirements.post');
+Route::get('/requerimento/{token}', [Home::class, 'getRequirements'])->name('home.requirements.get');
 
 Route::get('faq', [Home::class, 'faq'])->name('faq');
 

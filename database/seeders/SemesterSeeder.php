@@ -15,7 +15,7 @@ class SemesterSeeder extends Seeder
     public function run(): void
     {
         Semester::insert([
-            ['description' => '2023.1', 'start' => '2023-01-01', 'end' => '2023-06-30', 'created_at' => now(), 'updated_at' => now()]
+            ['description' => '2023.1', 'start' => '2023-07-01', 'end' => '2023-12-31', 'created_at' => now(), 'updated_at' => now()]
         ]);
     }
 }

@@ -19,6 +19,7 @@ use Adldap\Query\Collection;
 use App\Http\Requests\StoreStudentOfADRequest;
 use App\Models\Course;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class HomeController extends Controller
@@ -32,82 +33,110 @@ class HomeController extends Controller
 
     public function postEnrollments(StoreStudentOfADRequest $request, ADInterface $ad): RedirectResponse
     {
-        $student = $this->getDataOfAD($ad, $request->validated());
+        $data = $this->getDataOfAD($ad, $request->validated());
 
-        if (!is_array($student)) {
+        if (!is_array($data)) {
             return to_route('home')->with('flash', [
                 'status' => 'warning', 'message' => 'Servidor de dados está temporariamente fora do ar. Por favor, tente novamente mais tarde.'
             ]);
         }
 
-        dd($student);
-
         try {
             $student = Student::firstOrCreate(
-                ['cpf' => $student['cpf']],
-                $student
+                ['cpf' => $data['student']['cpf']],
+                $data['student']
             );
-            foreach ($student->enrollments as $enrollment) {
+
+            foreach ($data['enrollments'] as $enrollment) {
                 $student->enrollments()->firstOrCreate(
                     ['number' => $enrollment['number']],
                     $enrollment
                 );
             }
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             return to_route('home')->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
         }
 
-        $student = Student::with(['enrollments:id,number' => ['course:id,cod,name']])->find($student->id);
+        $student->load(['enrollments:id,number' => ['course:id,cod,name']]);
 
-        dd($student);
-
-        Session::put('data', $data);
+        Session::put('student', $student->id);
         Session::put('token', Str::random(20));
         return to_route('home.enrollments.get', ['token' => Session::get('token')]);
     }
 
     public function getEnrollments(Request $request): Response
     {
-        $data = Session::get('data');
+        if (Session::get('token') != $request->token) {
+            return to_route('home')->with('flash', [
+                'status' => 'warning', 'message' => 'Token inválido. Por favor, tente novamente.'
+            ]);
+        }
+
+        $student = Student::with(['enrollments:id,number' => ['course:id,cod,name']])->findOrFail(Session::get('student'));
+
+        $enrollments = $student->enrollments()->get()->map(function ($enrollment) {
+            return [
+                'number' => $enrollment->id,
+                'course' => $enrollment->number . ' | ' . $enrollment->course->name,
+            ];
+        });
 
         return Inertia::render('Home/Enrollments', [
             'listWeekDays' => Weekday::getActiveDays(),
-            'enrollments' => $data['enrollments'],
-            'student' => $data['student'],
-            'requirements' => RequirementType::getActiveTypes()
+            'enrollments' => $enrollments,
+            'student' => $student,
+            'requirements' => RequirementType::getActiveTypes(),
+            'token' => $request->token,
         ]);
     }
 
     public function postRequirements(Request $request): RedirectResponse
     {
-        return to_route('home.requirements.get', 1);
+        if (Session::get('token') != $request->token) {
+            return to_route('home')->with('flash', [
+                'status' => 'warning', 'message' => 'Token inválido. Por favor, tente novamente.'
+            ]);
+        }
+
+        $data = $request->validate([
+            'enrollment' => 'required|exists:enrollments,id',
+            'weekdays' => 'required|array',
+            'weekdays.*' => 'required|exists:weekdays,id',
+            'requirement' => 'required|exists:requirement_types,id',
+            'justification' => 'nullable|string|min:3|max:255',
+        ]);
+
+        if (Requirement::where('enrollment_id', $data['enrollment'])->where('requirement_type_id', $data['requirement'])->where('semester_id', Semester::where('start', '<=', now())->where('end', '>=', now())->first()->id)->where('status', Requirement::TO_ANALYZE)->count() > 0) {
+            return to_route('home.enrollments.get', $request->token)->with('flash', [
+                'status' => 'warning', 'message' => 'Você já possui uma solicitação deste tipo em andamento.'
+            ]);
+        }
+
+        $requirement = Requirement::create([
+            'status' => Requirement::TO_ANALYZE,
+            'justification' => $data['justification'],
+            'enrollment_id' => $data['enrollment'],
+            'requirement_type_id' => $data['requirement'],
+            'semester_id' => Semester::where('start', '<=', now())->where('end', '>=', now())->first()->id,
+        ]);
+
+        $requirement->weekdays()->attach($data['weekdays']);
+
+        Session::put('requirement', $requirement->id);
+
+        return to_route('home.requirements.get', $request->token);
     }
 
     public function getRequirements(Request $request): Response
     {
-        $requirement = [
-            'student' => [
-                'name' => 'Fulano dos Anzois Pereira',
-                'cpf' => '000.222.888-66',
-                'rg' => '250035522',
-                'birth' => '20/09/2001',
-                'academic_email' => 'fu.la@no.test',
-                'personal_email' => 'fu.la@no.test'
-            ],
-            'enrollment' => [
-                'number' => 20223652554,
-                'course' => [
-                    'cod' => 32560,
-                    'name' => 'Técnico em Mecânica'
-                ]
-            ],
-            'weekdays' => [
-                ['id' => 1, 'name' => 'Segunda-feira'],
-                ['id' => 2, 'name' => 'Terça-feira'],
-                ['id' => 4, 'name' => 'Quinta-feira'],
-            ]
+        if (Session::get('token') != $request->token) {
+            return to_route('home')->with('flash', [
+                'status' => 'warning', 'message' => 'Token inválido. Por favor, tente novamente.'
+            ]);
+        }
 
-        ];
+        $requirement = Requirement::with(['enrollment' => ['course', 'student'], 'requirementType', 'semester', 'weekdays'])->findOrFail(Session::get('requirement'));
 
         return Inertia::render('Home/Requirements', [
             'requirement' => $requirement
@@ -139,10 +168,10 @@ class HomeController extends Controller
             return $e->getMessage();
         }
 
-        return $this->sanitizeActiveDirectoryData($student);
+        return $this->sanitizeActiveDirectoryData($student, $data);
     }
 
-    private function sanitizeActiveDirectoryData(Collection $data): ?array
+    private function sanitizeActiveDirectoryData(Collection $data, array $request): ?array
     {
         if (empty($data)) {
             throw ValidationException::withMessages([
@@ -155,15 +184,19 @@ class HomeController extends Controller
 
         foreach ($data as $item) {
             // Verifica se a matricula está no padrão atual de 14 dígitos
-            if ($item->extensionattribute15[0] != 'Ativo') continue;
+            if ($item->extensionattribute15[0] != 'Ativo')
+                continue;
 
             // Lança um erro caso não tenha nenhum e-mail
-            if (!isset($item->mailNickname[0]) && !isset($item->extensionAttribute4[0])) $error = $item->cn[0];
+            if (!isset($item->mailNickname[0]) && !isset($item->extensionAttribute4[0]))
+                $error = $item->cn[0];
 
             if (empty($student)) {
                 $student = [
                     'cpf' => self::sanitizeCPF($item->extensionattribute6[0]),
-                    'name' => $item->cn[0],
+                    'rg' => $request['rg'],
+                    'birth' => $request['birth'],
+                    'name' => $item->description[0],
                     'personal_email' => $item->mailNickname[0] ?? $item->extensionAttribute4[0],
                     'institutional_email' => $item->extensionAttribute4[0] ?? null,
                 ];
@@ -194,6 +227,6 @@ class HomeController extends Controller
             return $course;
         }
 
-        return Course::where('cod', '00000')->fist();
+        return Course::where('cod', '00000')->first();
     }
 }

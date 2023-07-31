@@ -17,6 +17,9 @@ class Enrollment extends Model
 {
     use HasFactory, LogsActivity, CreatedAndUpdatedTz;
 
+    public const ACTIVE = true;
+    public const INACTIVE = false;
+
     protected $fillable = [
         'number', 'status', 'course_id', 'student_id'
     ];
