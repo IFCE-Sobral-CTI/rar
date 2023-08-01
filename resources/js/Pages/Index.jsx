@@ -47,9 +47,20 @@ export default function Index({semester}) {
 
     if (!semester) {
         return (
-            <div className="p-1 bg-white rounded shadow md:shadow-md md:p-4 md:rounded-xl md:w-1/2">
-                <h3 className='text-2xl font-semibold text-center text-red-400'>Fora do período de solicitação de cartão de acesso ao restaurante.</h3>
-            </div>
+            <HomeLayout>
+                <div className="flex flex-col gap-4">
+                    <Panel className={'flex flex-wrap justify-between gap-2'}>
+                        <Header
+                            title="Requerimento de Acesso ao Restaurante Acadêmico"
+                        />
+                    </Panel>
+                    <Panel className={'flex flex-col flex-wrap justify-between gap-2'}>
+                        <h3 className='text-2xl font-semibold text-center text-red-500'>
+                            Fora do período de solicitação de cartão de acesso ao restaurante.
+                        </h3>
+                    </Panel>
+                </div>
+            </HomeLayout>
         )
     }
 
