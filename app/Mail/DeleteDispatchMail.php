@@ -32,7 +32,7 @@ class DeleteDispatchMail extends Mailable
     {
         return new Envelope(
             subject: '[DESCONSIDERAR] analise do requerimento de acesso ao restaurante',
-            from: new Address($this->dispatch->requirement->enrollment->student->personal_email, $this->dispatch->requirement->enrollment->student->name),
+            to: new Address($this->dispatch->requirement->enrollment->student->personal_email, $this->dispatch->requirement->enrollment->student->name),
             replyTo: [
                 new Address($this->dispatch->requirement->enrollment->student->institutional_email),
             ],

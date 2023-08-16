@@ -12,7 +12,6 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
 
 class SendToReprography extends Mailable implements ShouldQueue
 {
@@ -36,7 +35,7 @@ class SendToReprography extends Mailable implements ShouldQueue
     {
         return new Envelope(
             subject: 'Cartões para impressão',
-            from: new Address(env('MAIL_REPROGRAPHY', 'reprograph@test.local')),
+            to: new Address( 'reprografia.sobral@ifce.edu.br', 'reprografia.sobral@ifce.edu.br'),
             tags: ['IFCE'],
             metadata: [
                 'report_id' => $this->report->id,
