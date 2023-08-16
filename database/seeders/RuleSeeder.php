@@ -40,7 +40,14 @@ class RuleSeeder extends Seeder
             ],
             'print_queues' => [
                 'group' => Group::firstOrCreate(['description' => 'Fila de Impressão']),
-                'only' => ['Página inicial' => 'viewAny', 'Detalhes' => 'view', 'Apagar' => 'delete'],
+                'only' => [
+                    'Página inicial' => 'viewAny',
+                    'Detalhes' => 'view',
+                    'Apagar' => 'delete'
+                ],
+                'additional' => [
+                    'Enviar para reprografia' => 'print_queues.send',
+                ]
             ],
             'dispatches' => ['group' => Group::firstOrCreate(['description' => 'Despachos'])],
             'students' => ['group' => Group::firstOrCreate(['description' => 'Discentes'])],

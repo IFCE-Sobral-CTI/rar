@@ -37,7 +37,7 @@ class StoreStudentOfADRequest extends FormRequest
             'rg' => 'R.G.',
             'birth' => 'data de nascimento',
             'card' => 'cartão',
-            'h_captcha_response' => 'captcha',
+            //'h_captcha_response' => 'captcha',
         ];
     }
 

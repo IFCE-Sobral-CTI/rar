@@ -15,7 +15,7 @@ function Edit({ user, permissions }) {
         registry: user.registry,
         permission_id: user.permission_id
     });
-
+    
     const onHandleChange = (event) => {
         setData(event.target.name, event.target.value);
     };
@@ -52,17 +52,17 @@ function Edit({ user, permissions }) {
                         </div>
                         <div className="mb-4">
                             <label htmlFor="name" className="font-light">Nome</label>
-                            <Input value={data.name} name={'name'} handleChange={onHandleChange} required={true} placeholder="Digite o nome completo" />
+                            <Input initialValue={data.name} name={'name'} handleChange={onHandleChange} required={true} placeholder="Digite o nome completo" />
                             <InputError message={errors.name} />
                         </div>
                         <div className="mb-4">
                             <label htmlFor="email" className="font-light">E-mail</label>
-                            <Input type={'email'} value={data.email} name={'email'} handleChange={onHandleChange} required={true} placeholder="Digite um e-mail válido" />
+                            <Input type={'email'} initialValue={data.email} name={'email'} handleChange={onHandleChange} required={true} placeholder="Digite um e-mail válido" />
                             <InputError message={errors.email} />
                         </div>
                         <div className="mb-4">
                             <label htmlFor="registry" className="font-light">Matricula</label>
-                            <Input type={'number'} value={data.registry} name={'registry'} handleChange={onHandleChange} required={true} placeholder="Digite a matricula" />
+                            <Input type={'number'} initialValue={data.registry} name={'registry'} handleChange={onHandleChange} required={true} placeholder="Digite a matricula" />
                             <InputError message={errors.registry} />
                         </div>
                         <div className="flex items-center justify-center gap-4 mt-6">
