@@ -22,7 +22,7 @@ class StoreEnrollmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'number' => 'required|digits_between:14,16|unique:enrollments,number',
+            'number' => 'required|digits_between:10,16|unique:enrollments,number',
             'course_id' => 'required|exists:courses,id',
             'status' => 'required|boolean'
         ];

@@ -22,7 +22,7 @@ class UpdateEnrollmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'number' => 'required|digits_between:14,16|unique:enrollments,number,'.$this->enrollment->id,
+            'number' => 'required|digits_between:10,16|unique:enrollments,number,'.$this->enrollment->id,
             'course_id' => 'required|exists:courses,id',
             'status' => 'required|boolean'
         ];
