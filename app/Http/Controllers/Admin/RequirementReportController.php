@@ -36,7 +36,7 @@ class RequirementReportController extends Controller
                     ['id' => LevelOfEducation::higher, 'name' => LevelOfEducation::higher->description()],
                     ['id' => LevelOfEducation::technical, 'name' => LevelOfEducation::technical->description()],
                 ],
-                'type_of_requirement' => RequirementType::getDataForSelectInput(),
+                'type_of_requirement' => RequirementType::getDataForSelectInput(status: null),
                 'semester' => Semester::getDataForSelectInput(),
                 'status' => [
                     ['id' => Requirement::TO_ANALYZE, 'name' => 'Em analise'],

@@ -50,8 +50,16 @@ class RequirementType extends Model
         return $query->select('id', 'description')->where('status', true)->get();
     }
 
-    public function scopeGetDataForSelectInput(Builder $query): Collection
+    public function scopeGetDataForSelectInput(Builder $query, ?bool $status = true): Collection
     {
+        if (is_null($status))
+            return $query->get()->map(function($item) {
+                return [
+                    'id' => $item->id,
+                    'name' => $item->description,
+                ];
+            });
+
         return $query->where('status', true)->get()->map(function($item) {
             return [
                 'id' => $item->id,
