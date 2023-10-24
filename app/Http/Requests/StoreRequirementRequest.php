@@ -30,7 +30,7 @@ class StoreRequirementRequest extends FormRequest
             'weekdays.*' => 'exists:weekdays,id'
         ];
 
-        if (RequirementType::where('description', 'Segunda via')->first())
+        if ($this->requirement_type_id == RequirementType::where('description', 'Segunda via')->first()->id)
             $rules['justification'] = 'required';
 
         return $rules;
