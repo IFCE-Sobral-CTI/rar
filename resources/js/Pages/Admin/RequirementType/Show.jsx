@@ -8,15 +8,29 @@ import ShowField from "@/Components/Dashboard/ShowField";
 
 function Show({ type, can }) {
     const status = (status) => {
-        let className = 'py-1 px-2 rounded-md text-sm text-white';
-        if (status) {
+        let className = 'px-2 py-1 text-sm text-white rounded-md';
+        if (status === 1) {
             className += ' bg-green-500';
         } else {
             className += ' bg-red-500';
         }
 
         return (
-            <span className={className}>{status == '1' ? 'Ativo' : 'Inativo'}</span>
+            <span className={className}>{status === 1 ? 'Ativo' : 'Inativo'}</span>
+        )
+    }
+
+
+    const printable = (status) => {
+        let className = 'px-2 py-1 text-sm text-white rounded-md';
+        if (status === 1) {
+            className += ' bg-green-500';
+        } else {
+            className += ' bg-red-500';
+        }
+
+        return (
+            <span className={className}>{status === 1 ? 'Sim' : 'Não'}</span>
         )
     }
 
@@ -32,7 +46,8 @@ function Show({ type, can }) {
             >
                 <Panel className={'flex flex-col gap-4'}>
                     <ShowField label={'Descrição'} value={type.description} />
-                    <ShowField label={'Nome'} value={status(type.status)} />
+                    <ShowField label={'Situação'} value={status(type.status)} />
+                    <ShowField label={'Imprimível'} value={printable(type.printable)} />
                     <ShowField label={'Criado em'} value={type.created_at} />
                     <ShowField label={'Atualizado em'} value={type.updated_at} />
                 </Panel>

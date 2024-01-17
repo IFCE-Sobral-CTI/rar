@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('requirement_types', function (Blueprint $table) {
             $table->id();
             $table->string('description');
-            $table->boolean('status')->default(false);
-            $table->boolean('printable')->default(false);
+            $table->tinyInteger('status')->default(2);
+            $table->tinyInteger('printable')->default(2);
             $table->timestamps();
         });
     }

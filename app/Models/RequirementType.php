@@ -15,10 +15,15 @@ class RequirementType extends Model
 {
     use HasFactory, LogsActivity, CreatedAndUpdatedTz;
 
+    /**
+     * Fillable fields.
+     *
+     * @var array
+     */
     protected $fillable = [
         'description',
-        'status',
-        'printable',
+        'status', // 1 => active, 2 => inactive
+        'printable', // 1 => yes, 2 => no
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -47,10 +52,10 @@ class RequirementType extends Model
 
     public function scopeGetActiveTypes(Builder $query): Collection
     {
-        return $query->select('id', 'description')->where('status', true)->get();
+        return $query->select('id', 'description')->where('status', 1)->get();
     }
 
-    public function scopeGetDataForSelectInput(Builder $query, ?bool $status = true): Collection
+    public function scopeGetDataForSelectInput(Builder $query, ?int $status = 1): Collection
     {
         if (is_null($status))
             return $query->get()->map(function($item) {
@@ -60,7 +65,7 @@ class RequirementType extends Model
                 ];
             });
 
-        return $query->where('status', true)->get()->map(function($item) {
+        return $query->where('status', 1)->get()->map(function($item) {
             return [
                 'id' => $item->id,
                 'name' => $item->description,

@@ -16,7 +16,7 @@ export default function Form({data, errors, handleSubmit, onHandleChange, proces
             <SelectOnly
                 value={data.status}
                 data={[
-                    {id: 0, name: 'Inativo'},
+                    {id: 2, name: 'Inativo'},
                     {id: 1, name: 'Ativo'},
                 ]}
                 onChange={onHandleChange}
@@ -28,7 +28,7 @@ export default function Form({data, errors, handleSubmit, onHandleChange, proces
             <SelectOnly
                 value={data.printable}
                 data={[
-                    {id: 0, name: 'Não'},
+                    {id: 2, name: 'Não'},
                     {id: 1, name: 'Sim'},
                 ]}
                 onChange={onHandleChange}

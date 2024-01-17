@@ -18,8 +18,8 @@ class RequirementTypeFactory extends Factory
     {
         return [
             'description' => fake()->sentence(2),
-            'status' => !!rand(0, 1),
-            'printable' => !!rand(0, 1),
+            'status' => !!rand(1, 2), // 1 = active, 2 = inactive
+            'printable' => !!rand(1, 2), // 1 = yes, 2 = no
         ];
     }
 }

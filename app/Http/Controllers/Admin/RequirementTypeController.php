@@ -27,8 +27,8 @@ class RequirementTypeController extends Controller
 
         return Inertia::render('Admin/RequirementType/Index', array_merge(RequirementType::search($request), [
             'can' => [
-                'view' => Auth::user()->can('types.view'),
-                'create' => Auth::user()->can('types.create'),
+                'view' => $request->user()->can('types.view'),
+                'create' => $request->user()->can('types.create'),
             ]
         ]));
     }
@@ -69,15 +69,15 @@ class RequirementTypeController extends Controller
      *
      * @throws AuthorizationException
      */
-    public function show(RequirementType $type): Response
+    public function show(Request $request, RequirementType $type): Response
     {
         $this->authorize('types.view', $type);
 
         return Inertia::render('Admin/RequirementType/Show', [
             'type' => $type,
             'can' => [
-                'delete' => Auth::user()->can('types.delete'),
-                'update' => Auth::user()->can('types.update'),
+                'delete' => $request->user()->can('types.delete'),
+                'update' => $request->user()->can('types.update'),
             ]
         ]);
     }

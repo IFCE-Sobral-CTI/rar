@@ -23,8 +23,8 @@ class UpdateRequirementTypeRequest extends FormRequest
     {
         return [
             'description' => 'required|unique:requirement_types,description,'.$this->type->id,
-            'status' => 'required|boolean',
-            'printable' => 'required|boolean'
+            'status' => 'required|in:1,2',
+            'printable' => 'required|in:1,2'
         ];
     }
 }

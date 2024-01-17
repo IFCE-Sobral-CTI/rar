@@ -18,28 +18,28 @@ function Index({ requirementTypes, count, page, termSearch, can }) {
     }, [term]);
 
     const status = (status) => {
-        let className = 'py-1 px-2 rounded-md text-sm text-white';
-        if (status) {
+        let className = 'px-2 py-1 text-sm text-white rounded-md';
+        if (status === 1) {
             className += ' bg-green-500';
         } else {
             className += ' bg-red-500';
         }
 
         return (
-            <span className={className}>{status == '1' ? 'Ativo' : 'Inativo'}</span>
+            <span className={className}>{status === 1 ? 'Ativo' : 'Inativo'}</span>
         )
     }
 
     const printable = (status) => {
-        let className = 'py-1 px-2 rounded-md text-sm text-white';
-        if (status) {
+        let className = 'px-2 py-1 text-sm text-white rounded-md';
+        if (status === 1) {
             className += ' bg-green-500';
         } else {
             className += ' bg-red-500';
         }
 
         return (
-            <span className={className}>{status == '1' ? 'Sim' : 'Não'}</span>
+            <span className={className}>{status === 1 ? 'Sim' : 'Não'}</span>
         )
     }
 
@@ -100,9 +100,9 @@ function Index({ requirementTypes, count, page, termSearch, can }) {
                     <table className="w-full table-auto text-neutral-600">
                         <thead>
                             <tr className="border-b">
-                                <th className="px-1 pt-3 font-semibold text-left w-10/12">Descrição</th>
-                                <th className="px-1 pt-3 font-semibold text-left w-1/12">Imprimível</th>
-                                <th className="px-1 pt-3 font-semibold text-left w-1/12">Situação</th>
+                                <th className="w-10/12 px-1 pt-3 font-semibold text-left">Descrição</th>
+                                <th className="w-1/12 px-1 pt-3 font-semibold text-left">Imprimível</th>
+                                <th className="w-1/12 px-1 pt-3 font-semibold text-left">Situação</th>
                                 <th className="w-1/12"></th>
                             </tr>
                         </thead>

@@ -5,11 +5,10 @@ import Panel from "@/Components/Dashboard/Panel";
 import Form from "./Components/Form";
 
 function Edit({ type }) {
-    console.log(type);
     const { data, setData, put, processing, errors } = useForm({
         description: type.description,
-        status: type.status? 1: 0,
-        printable: type.printable? 1: 0,
+        status: type.status,
+        printable: type.printable,
     });
 
     const onHandleChange = (event) => {

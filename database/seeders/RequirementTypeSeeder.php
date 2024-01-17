@@ -14,9 +14,9 @@ class RequirementTypeSeeder extends Seeder
     public function run(): void
     {
         RequirementType::insert([
-            ['description' => 'Primeira via', 'status' => true, 'printable' => true, 'created_at' => now(), 'updated_at' => now()],
-            ['description' => 'Segunda via', 'status' => true, 'printable' => true, 'created_at' => now(), 'updated_at' => now()],
-            ['description' => 'Renovação', 'status' => true, 'printable' => false, 'created_at' => now(), 'updated_at' => now()],
+            ['description' => 'Primeira via', 'status' => 1, 'printable' => 1, 'created_at' => now(), 'updated_at' => now()],
+            ['description' => 'Segunda via', 'status' => 1, 'printable' => 1, 'created_at' => now(), 'updated_at' => now()],
+            ['description' => 'Renovação', 'status' => 1, 'printable' => 2, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }
