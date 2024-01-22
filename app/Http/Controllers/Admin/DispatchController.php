@@ -32,8 +32,8 @@ class DispatchController extends Controller
 
         return Inertia::render('Admin/Dispatch/Index', array_merge(Dispatch::search($requirement, $request), [
             'can' => [
-                'view' => Auth::user()->can('dispatches.view'),
-                'create' => Auth::user()->can('dispatches.create'),
+                'view' => $request->user()->can('dispatches.view'),
+                'create' => $request->user()->can('dispatches.create'),
             ],
             'requirement' => $requirement,
         ]));
@@ -86,7 +86,7 @@ class DispatchController extends Controller
      *
      * @throws AuthorizationException
      */
-    public function show(Requirement $requirement, Dispatch $dispatch): Response
+    public function show(Request $request, Requirement $requirement, Dispatch $dispatch): Response
     {
         $this->authorize('dispatches.view', $dispatch);
 
@@ -96,8 +96,8 @@ class DispatchController extends Controller
         return Inertia::render('Admin/Dispatch/Show', [
             'dispatch' => $dispatch,
             'can' => [
-                'delete' => Auth::user()->can('dispatches.delete'),
-                'update' => Auth::user()->can('dispatches.update'),
+                'delete' => $request->user()->can('dispatches.delete'),
+                'update' => $request->user()->can('dispatches.update'),
             ],
             'requirement' => $requirement,
         ]);
@@ -164,7 +164,7 @@ class DispatchController extends Controller
             $dispatch->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return to_route('requirements.dispatches.show', [$requirement, $dispatch])->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
+            return to_route('requirements.dispatches.index', [$requirement])->with('flash', ['status' => 'danger', 'message' => $e->getMessage()]);
         }
 
         return to_route('requirements.dispatches.index', $requirement)->with('flash', ['status' => 'success', 'message' => 'Registro apagado com sucesso.']);

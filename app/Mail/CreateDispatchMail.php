@@ -30,11 +30,17 @@ class CreateDispatchMail extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
+        if ($this->dispatch->requirement->enrollment->student->institutional_email) {
+            $replyTo = new Address($this->dispatch->requirement->enrollment->student->personal_email, $this->dispatch->requirement->enrollment->student->name);
+        } else {
+            $replyTo = new Address($this->dispatch->requirement->enrollment->student->institutional_email, $this->dispatch->requirement->enrollment->student->name);
+        }
+
         return new Envelope(
             subject: 'Atualização do requerimento de Acesso ao Restaurante Acadêmico',
             from: new Address($this->dispatch->requirement->enrollment->student->personal_email, $this->dispatch->requirement->enrollment->student->name),
             replyTo: [
-                new Address($this->dispatch->requirement->enrollment->student->institutional_email),
+                $replyTo,
             ],
             tags: ['IFCE'],
             metadata: [

@@ -107,7 +107,10 @@ class HomeController extends Controller
             'justification' => 'nullable|string|min:3|max:255',
         ]);
 
-        if (Requirement::where('enrollment_id', $data['enrollment'])->where('requirement_type_id', $data['requirement'])->where('semester_id', Semester::where('start', '<=', now())->where('end', '>=', now())->first()->id)->where('status', Requirement::TO_ANALYZE)->count() > 0) {
+        /**
+         * Verifica se o aluno já possui uma solicitação do mesmo tipo em andamento
+         */
+        if (Requirement::where('enrollment_id', $data['enrollment'])->where('requirement_type_id', $data['requirement'])->where('semester_id', Semester::where('start', '<=', now())->where('end', '>=', now())->first()->id)->count() > 0) {
             return to_route('home.enrollments.get', $request->token)->with('flash', [
                 'status' => 'warning', 'message' => 'Você já possui uma solicitação deste tipo em andamento.'
             ]);
