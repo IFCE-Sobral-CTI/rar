@@ -92,7 +92,7 @@ class Requirement extends Model
 
         return [
             'count' => $query->count(),
-            'requirements' => $query->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10))->appends(['term' => $request->term]),
+            'requirements' => $query->orderBy('status', 'ASC')->orderBy('created_at', 'ASC')->paginate(env('APP_PAGINATION', 10))->appends(['term' => $request->term]),
             'page' => $request->page?? 1,
             'termSearch' => $request->term,
         ];
@@ -331,13 +331,21 @@ class Requirement extends Model
             });
         });
 
+        $query->when($request->init_date, function($query) use ($request) {
+            return $query->where('created_at', '>=' ,$request->init_date);
+        });
+
+        $query->when($request->final_date, function($query) use ($request) {
+            return $query->where('created_at', '<=' ,$request->final_date);
+        });
+
         // Dados para impressão
         if ($print)
             return  $query->orderBy('status', 'ASC')->get();
 
         return [
             'count' => $query->count(),
-            'requirements' => $query->orderBy('status', 'ASC')->paginate(env('APP_PAGINATION', 10))->appends([
+            'requirements' => $query->orderBy('status', 'ASC')->orderBy('created_at', 'ASC')->paginate(env('APP_PAGINATION', 10))->appends([
                 'status' => $request->status,
                 'type' => $request->type,
                 'course' => $request->course,
