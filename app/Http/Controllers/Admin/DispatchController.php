@@ -71,7 +71,7 @@ class DispatchController extends Controller
             // Atualiza o status do Requerimento
             $requirement->update(['status' => $request->status]);
             // Adiciona o requerimento a fila de impressão
-            if ($request->status === Dispatch::DEFERRED && $dispatch->requirement->requirementType->printable)
+            if ($request->status === Dispatch::DEFERRED && $dispatch->requirement->requirementType->printable === 1)
                 $dispatch->printQueues()->create();
         } catch (Exception $e) {
             Log::error($e->getMessage());
