@@ -30,18 +30,29 @@ class DeleteDispatchMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        if ($this->dispatch->requirement->enrollment->student->institutional_email) {
-            $replyTo = new Address($this->dispatch->requirement->enrollment->student->personal_email, $this->dispatch->requirement->enrollment->student->name);
-        } else {
-            $replyTo = new Address($this->dispatch->requirement->enrollment->student->institutional_email, $this->dispatch->requirement->enrollment->student->name);
+        $student = $this->dispatch->requirement->enrollment->student;
+
+        $personal = $student->personal_email ?? null;
+        $institutional = $student->institutional_email ?? null;
+
+        $to = null;
+        if ($personal) {
+            $to = new Address($personal, $student->name);
+        } elseif ($institutional) {
+            $to = new Address($institutional, $student->name);
+        }
+
+        $replyTo = null;
+        if ($institutional) {
+            $replyTo = new Address($institutional, $student->name);
+        } elseif ($personal) {
+            $replyTo = new Address($personal, $student->name);
         }
 
         return new Envelope(
             subject: '[DESCONSIDERAR] analise do requerimento de acesso ao restaurante',
-            to: new Address($this->dispatch->requirement->enrollment->student->personal_email, $this->dispatch->requirement->enrollment->student->name),
-            replyTo: [
-                $replyTo,
-            ],
+            to: $to ? [$to] : null,
+            replyTo: $replyTo ? [$replyTo] : null,
             tags: ['IFCE'],
             metadata: [
                 'dispatch_id' => $this->dispatch->id,

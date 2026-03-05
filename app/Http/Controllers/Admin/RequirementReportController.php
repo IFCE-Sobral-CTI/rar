@@ -30,6 +30,8 @@ class RequirementReportController extends Controller
                 'course' => $request->course,
                 'semester' => $request->semester,
                 'page' => $request->page,
+                'init_date' => $request->init_date,
+                'final_date' => $request->final_date,
             ],
             'data' => [
                 'type_of_course' => [

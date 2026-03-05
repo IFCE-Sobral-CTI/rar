@@ -30,18 +30,29 @@ class CreateRequirementMail extends Mailable implements ShouldQueue
      */
     public function envelope(): Envelope
     {
-        if ($this->requirement->enrollment->student->institutional_email) {
-            $replyTo = new Address($this->requirement->enrollment->student->personal_email, $this->requirement->enrollment->student->name);
-        } else {
-            $replyTo = new Address($this->requirement->enrollment->student->institutional_email, $this->requirement->enrollment->student->name);
+        $student = $this->requirement->enrollment->student;
+
+        $personal = $student->personal_email ?? null;
+        $institutional = $student->institutional_email ?? null;
+
+        $from = null;
+        if ($personal) {
+            $from = new Address($personal, $student->name);
+        } elseif ($institutional) {
+            $from = new Address($institutional, $student->name);
+        }
+
+        $replyTo = null;
+        if ($institutional) {
+            $replyTo = new Address($institutional, $student->name);
+        } elseif ($personal) {
+            $replyTo = new Address($personal, $student->name);
         }
 
         return new Envelope(
             subject: 'Requerimento de Acesso ao Restaurante Acadêmico',
-            from: new Address($this->requirement->enrollment->student->personal_email, $this->requirement->enrollment->student->name),
-            replyTo: [
-                $replyTo,
-            ],
+            from: $from,
+            replyTo: $replyTo ? [$replyTo] : null,
             tags: ['IFCE'],
             metadata: [
                 'requirement_id' => $this->requirement->id,

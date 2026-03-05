@@ -30,12 +30,29 @@ class UpdateDispatchMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $student = $this->dispatch->requirement->enrollment->student;
+
+        $personal = $student->personal_email ?? null;
+        $institutional = $student->institutional_email ?? null;
+
+        $from = null;
+        if ($personal) {
+            $from = new Address($personal, $student->name);
+        } elseif ($institutional) {
+            $from = new Address($institutional, $student->name);
+        }
+
+        $replyTo = null;
+        if ($institutional) {
+            $replyTo = new Address($institutional, $student->name);
+        } elseif ($personal) {
+            $replyTo = new Address($personal, $student->name);
+        }
+
         return new Envelope(
             subject: 'Atualização do requerimento de Acesso ao Restaurante Acadêmico',
-            from: new Address($this->dispatch->requirement->enrollment->student->personal_email, $this->dispatch->requirement->enrollment->student->name),
-            replyTo: [
-                new Address($this->dispatch->requirement->enrollment->student->institutional_email),
-            ],
+            from: $from,
+            replyTo: $replyTo ? [$replyTo] : null,
             tags: ['IFCE'],
             metadata: [
                 'dispatch_id' => $this->dispatch->id,
