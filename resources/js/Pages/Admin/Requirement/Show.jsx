@@ -52,7 +52,7 @@ function Show({ requirement, can }) {
                             label={'Comprovante de perda'}
                             value={
                                 <a
-                                    href={`/storage/${requirement.card_loss_proof}`}
+                                    href={route('requirements.card-loss-proof', requirement.id)}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-blue-600 underline hover:text-blue-800"

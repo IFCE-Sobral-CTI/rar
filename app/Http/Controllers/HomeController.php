@@ -126,6 +126,7 @@ class HomeController extends Controller
 
         $cardLossProofPath = null;
         if (!empty($data['card_loss_proof'])) {
+            Storage::disk('public')->makeDirectory('requirements');
             $cardLossProofPath = $data['card_loss_proof']->store('requirements', 'public');
         }
 

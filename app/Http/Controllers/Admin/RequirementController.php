@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -69,6 +70,7 @@ class RequirementController extends Controller
         try {
             $data = $request->only(['status', 'semester_id', 'enrollment_id', 'requirement_type_id', 'justification']);
             if ($request->hasFile('card_loss_proof')) {
+                Storage::disk('public')->makeDirectory('requirements');
                 $data['card_loss_proof'] = $request->file('card_loss_proof')->store('requirements', 'public');
             }
             $requirement = Requirement::create($data);
@@ -170,5 +172,23 @@ class RequirementController extends Controller
         }
 
         return to_route('requirements.index')->with('flash', ['status' => 'success', 'message' => 'Registro apagado com sucesso.']);
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function cardLossProof(Requirement $requirement): StreamedResponse|RedirectResponse
+    {
+        $this->authorize('requirements.view', $requirement);
+
+        if (!$requirement->card_loss_proof || !Storage::disk('public')->exists($requirement->card_loss_proof)) {
+            return to_route('requirements.show', $requirement)->with('flash', [
+                'status' => 'warning', 'message' => 'Comprovante não encontrado.',
+            ]);
+        }
+
+        return Storage::disk('public')->response($requirement->card_loss_proof, 'comprovante.pdf', [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 }
