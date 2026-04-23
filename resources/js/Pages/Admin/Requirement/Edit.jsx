@@ -11,11 +11,16 @@ function Edit({ requirement, enrollments, requirement_types, weekdays, semesters
         semester_id: requirement.semester_id,
         requirement_type_id: requirement.requirement_type_id,
         weekday: requirement.weekdays.map(item => item.id),
-        justification: requirement.justification
+        justification: requirement.justification,
+        card_loss_proof: null,
     });
 
     const onHandleChange = (event) => {
-        setData(event.target.name, event.target.value);
+        if (event.target.type === 'file') {
+            setData(event.target.name, event.target.files[0] ?? null);
+        } else {
+            setData(event.target.name, event.target.value);
+        }
     };
 
     const handleSubmit = (e) => {
@@ -39,6 +44,7 @@ function Edit({ requirement, enrollments, requirement_types, weekdays, semesters
                         weekdays={weekdays}
                         semesters={semesters}
                         reprint_type={reprint_type}
+                        currentCardLossProof={requirement.card_loss_proof}
                     />
                 </Panel>
             </AuthenticatedLayout>

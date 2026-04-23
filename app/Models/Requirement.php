@@ -27,6 +27,7 @@ class Requirement extends Model
     protected $fillable = [
         'status',
         'justification',
+        'card_loss_proof',
         'requirement_type_id',
         'enrollment_id',
         'semester_id',

@@ -16,6 +16,7 @@ export default function Form({
     weekdays,
     semesters,
     reprint_type,
+    currentCardLossProof,
 }) {
     return (
         <form onSubmit={handleSubmit} autoComplete="off">
@@ -42,17 +43,43 @@ export default function Form({
                 required
             />
             {(reprint_type == data.requirement_type_id) &&
-                <div className="mb-4">
-                    <label htmlFor="justification" className="font-light">Justificativa</label>
-                    <Textarea
-                        name="justification"
-                        value={data.justification}
-                        handleChange={onHandleChange}
-                        required
-                        placeholder="Justificativa para requerimento"
-                    />
-                    <InputError message={errors.justification} />
-                </div>
+                <>
+                    <div className="mb-4">
+                        <label htmlFor="justification" className="font-light">Justificativa</label>
+                        <Textarea
+                            name="justification"
+                            value={data.justification}
+                            handleChange={onHandleChange}
+                            required
+                            placeholder="Justificativa para requerimento"
+                        />
+                        <InputError message={errors.justification} />
+                    </div>
+                    <div className="mb-4 flex flex-col gap-1">
+                        <label className="font-light">
+                            Comprovante de perda do cartão (PDF)
+                            {!currentCardLossProof && <span className="text-red-500 ml-1">*</span>}
+                        </label>
+                        {currentCardLossProof &&
+                            <p className="text-sm text-gray-500">
+                                Arquivo atual:{' '}
+                                <a href={`/storage/${currentCardLossProof}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                                    Visualizar
+                                </a>
+                                {' '}— selecione um novo arquivo para substituir.
+                            </p>
+                        }
+                        <input
+                            type="file"
+                            name="card_loss_proof"
+                            accept=".pdf,application/pdf"
+                            required={!currentCardLossProof}
+                            onChange={onHandleChange}
+                            className="block w-full text-sm text-gray-700 border border-neutral-400 rounded-lg shadow-sm cursor-pointer bg-white focus:outline-none p-2"
+                        />
+                        <InputError message={errors.card_loss_proof} />
+                    </div>
+                </>
             }
             <SelectOnly
                 value={data.semester_id}

@@ -47,6 +47,21 @@ function Show({ requirement, can }) {
                     <ShowField label={'Situação'} value={<Status value={requirement.status} />} />
                     <ShowField label={'Tipo de requerimento'} value={requirement.requirement_type.description} />
                     <ShowField label={'Justificativa'} value={requirement.justification?? ''} />
+                    {requirement.card_loss_proof &&
+                        <ShowField
+                            label={'Comprovante de perda'}
+                            value={
+                                <a
+                                    href={`/storage/${requirement.card_loss_proof}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 underline hover:text-blue-800"
+                                >
+                                    Visualizar PDF
+                                </a>
+                            }
+                        />
+                    }
                     <ShowField label={'Dias de aulas'} value={weekdays(requirement.weekdays)} />
                     <ShowField label={'Semestre'} value={requirement.semester.description} />
                     <ShowField label={'Criado em'} value={requirement.created_at} />

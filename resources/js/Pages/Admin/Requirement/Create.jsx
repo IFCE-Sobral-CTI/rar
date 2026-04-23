@@ -11,10 +11,16 @@ function Create({ enrollments, requirement_types, weekdays, semesters, reprint_t
         requirement_type_id: '',
         semester_id: '',
         weekday: [],
+        justification: '',
+        card_loss_proof: null,
     });
 
     const onHandleChange = (event) => {
-        setData(event.target.name, event.target.value);
+        if (event.target.type === 'file') {
+            setData(event.target.name, event.target.files[0] ?? null);
+        } else {
+            setData(event.target.name, event.target.value);
+        }
     };
 
     const handleSubmit = (e) => {
@@ -38,6 +44,7 @@ function Create({ enrollments, requirement_types, weekdays, semesters, reprint_t
                         weekdays={weekdays}
                         semesters={semesters}
                         reprint_type={reprint_type}
+                        currentCardLossProof={null}
                     />
                 </Panel>
             </AuthenticatedLayout>

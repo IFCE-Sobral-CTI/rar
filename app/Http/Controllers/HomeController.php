@@ -11,6 +11,7 @@ use App\Models\Weekday;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -88,6 +89,7 @@ class HomeController extends Controller
             'student' => $student,
             'requirements' => RequirementType::getActiveTypes(),
             'token' => $request->token,
+            'reprint_type' => RequirementType::where('description', 'Segunda via')->first()?->id,
         ]);
     }
 
@@ -99,12 +101,18 @@ class HomeController extends Controller
             ]);
         }
 
+        $segundaViaId = RequirementType::where('description', 'Segunda via')->first()?->id;
+        $isSegundaVia = $request->requirement == $segundaViaId;
+
         $data = $request->validate([
             'enrollment' => 'required|exists:enrollments,id',
             'weekdays' => 'required|array',
             'weekdays.*' => 'required|exists:weekdays,id',
             'requirement' => 'required|exists:requirement_types,id',
             'justification' => 'nullable|string|min:3|max:255',
+            'card_loss_proof' => $isSegundaVia
+                ? 'required|file|mimes:pdf|max:10240'
+                : 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         /**
@@ -116,9 +124,15 @@ class HomeController extends Controller
             ]);
         }
 
+        $cardLossProofPath = null;
+        if (!empty($data['card_loss_proof'])) {
+            $cardLossProofPath = $data['card_loss_proof']->store('requirements', 'public');
+        }
+
         $requirement = Requirement::create([
             'status' => Requirement::TO_ANALYZE,
             'justification' => $data['justification'],
+            'card_loss_proof' => $cardLossProofPath,
             'enrollment_id' => $data['enrollment'],
             'requirement_type_id' => $data['requirement'],
             'semester_id' => Semester::where('start', '<=', now())->where('end', '>=', now())->first()->id,

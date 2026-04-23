@@ -30,8 +30,10 @@ class UpdateRequirementRequest extends FormRequest
             'weekdays.*' => 'exists:weekdays,id'
         ];
 
-        if (RequirementType::where('description', 'Segunda via')->first())
+        if ($this->requirement_type_id == RequirementType::where('description', 'Segunda via')->first()->id)
             $rules['justification'] = 'required';
+
+        $rules['card_loss_proof'] = 'nullable|file|mimes:pdf|max:10240';
 
         return $rules;
     }

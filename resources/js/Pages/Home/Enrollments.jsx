@@ -8,12 +8,13 @@ import Button from "@/Components/Form/Button";
 import InputError from "@/Components/InputError";
 import Textarea from "@/Components/Form/Textarea";
 
-export default function Enrollments({ enrollments, student, requirements, listWeekDays, token }) {
+export default function Enrollments({ enrollments, student, requirements, listWeekDays, token, reprint_type }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         enrollment: null,
         requirement: null,
         weekdays: [],
-        justification: ''
+        justification: '',
+        card_loss_proof: null,
     });
 
     const [weekDays, setWeekDays] = useState([]);
@@ -31,7 +32,13 @@ export default function Enrollments({ enrollments, student, requirements, listWe
     }
 
     const onHandleChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
+        if (event.target.type === 'file') {
+            setData(event.target.name, event.target.files[0] ?? null);
+        } else if (event.target.type === 'checkbox') {
+            setData(event.target.name, event.target.checked);
+        } else {
+            setData(event.target.name, event.target.value);
+        }
     };
 
     const submit = (e) => {
@@ -129,17 +136,33 @@ export default function Enrollments({ enrollments, student, requirements, listWe
                             {!data.requirement && <p className='text-sm font-semibold text-red-400'>Por favor, selecionar um tipo de requerimento para continuar sua solicitação.</p>}
                             <InputError message={errors.requirement} className="mt-2" />
                         </div>
-                        {data.requirement == 2 &&
-                            <div>
-                                <span>Justificativa</span>
-                                <Textarea
-                                    name='justification'
-                                    value={data.justification}
-                                    handleChange={onHandleChange}
-                                    required={data.requirement == 2}
-                                    placeholder='Digite aqui sua justificativa'
-                                />
-                            </div>
+                        {data.requirement == reprint_type &&
+                            <>
+                                <div>
+                                    <span>Justificativa</span>
+                                    <Textarea
+                                        name='justification'
+                                        value={data.justification}
+                                        handleChange={onHandleChange}
+                                        required
+                                        placeholder='Digite aqui sua justificativa'
+                                    />
+                                    <InputError message={errors.justification} className="mt-2" />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                    <span>Comprovante de perda do cartão</span>
+                                    <span className="text-sm text-gray-500">Anexe o boletim de ocorrência em formato PDF (máximo 10 MB).</span>
+                                    <input
+                                        type="file"
+                                        name="card_loss_proof"
+                                        accept=".pdf,application/pdf"
+                                        required
+                                        onChange={onHandleChange}
+                                        className="block w-full text-sm text-gray-700 border border-neutral-400 rounded-lg shadow-sm cursor-pointer bg-white focus:outline-none p-2"
+                                    />
+                                    <InputError message={errors.card_loss_proof} className="mt-1" />
+                                </div>
+                            </>
                         }
                     </Panel>
                     <Panel className={'flex flex-col flex-wrap justify-between md:justify-center md:items-center gap-2 p-4'}>

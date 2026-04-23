@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -66,7 +67,11 @@ class RequirementController extends Controller
         $this->authorize('requirements.create', Requirement::class);
 
         try {
-            $requirement = Requirement::create($request->only(['status', 'semester_id', 'enrollment_id', 'requirement_type_id', 'justification']));
+            $data = $request->only(['status', 'semester_id', 'enrollment_id', 'requirement_type_id', 'justification']);
+            if ($request->hasFile('card_loss_proof')) {
+                $data['card_loss_proof'] = $request->file('card_loss_proof')->store('requirements', 'public');
+            }
+            $requirement = Requirement::create($data);
             $requirement->weekdays()->sync($request->weekday);
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -128,7 +133,14 @@ class RequirementController extends Controller
         $this->authorize('requirements.update', $requirement);
 
         try {
-            $requirement->update($request->validated());
+            $data = $request->only(['status', 'semester_id', 'enrollment_id', 'requirement_type_id', 'justification']);
+            if ($request->hasFile('card_loss_proof')) {
+                if ($requirement->card_loss_proof) {
+                    Storage::disk('public')->delete($requirement->card_loss_proof);
+                }
+                $data['card_loss_proof'] = $request->file('card_loss_proof')->store('requirements', 'public');
+            }
+            $requirement->update($data);
             $requirement->weekdays()->sync($request->weekday);
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -148,6 +160,9 @@ class RequirementController extends Controller
         $this->authorize('requirements.delete', $requirement);
 
         try {
+            if ($requirement->card_loss_proof) {
+                Storage::disk('public')->delete($requirement->card_loss_proof);
+            }
             $requirement->delete();
         } catch (Exception $e) {
             Log::error($e->getMessage());
