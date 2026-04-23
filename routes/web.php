@@ -40,9 +40,9 @@ use App\Models\Report;
 */
 
 Route::get('/', [Home::class, 'index'])->name('home');
-Route::post('/matriculas', [Home::class, 'postEnrollments'])->name('home.enrollments.post');
+Route::post('/matriculas', [Home::class, 'postEnrollments'])->name('home.enrollments.post')->middleware('throttle:home-lookup');
 Route::get('/matriculas/{token}', [Home::class, 'getEnrollments'])->name('home.enrollments.get');
-Route::post('/requerimento/{token}', [Home::class, 'postRequirements'])->name('home.requirements.post');
+Route::post('/requerimento/{token}', [Home::class, 'postRequirements'])->name('home.requirements.post')->middleware('throttle:home-requirement');
 Route::get('/requerimento/{token}', [Home::class, 'getRequirements'])->name('home.requirements.get');
 
 Route::get('faq', [Home::class, 'faq'])->name('faq');

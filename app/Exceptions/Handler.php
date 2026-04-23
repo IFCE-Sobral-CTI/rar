@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -45,6 +46,13 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (ThrottleRequestsException $e) {
+            return back()->with('flash', [
+                'status' => 'warning',
+                'message' => 'Muitas tentativas. Por favor, aguarde um momento antes de tentar novamente.',
+            ]);
         });
     }
 }

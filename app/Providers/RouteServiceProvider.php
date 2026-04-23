@@ -48,5 +48,15 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        // Busca no AD: máximo 5 tentativas por minuto por IP
+        RateLimiter::for('home-lookup', function (Request $request) {
+            return Limit::perMinute(15)->by($request->ip());
+        });
+
+        // Envio de requerimento: máximo 10 tentativas por minuto por IP
+        RateLimiter::for('home-requirement', function (Request $request) {
+            return Limit::perMinute(30)->by($request->ip());
+        });
     }
 }

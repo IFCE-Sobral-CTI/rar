@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import Panel from '@/Components/Public/Panel';
 import Header from '@/Components/Public/Header';
 import Button from '@/Components/Form/Button';
 import Input from '@/Components/Form/Input';
 import HomeLayout from '@/Layouts/HomeLayout';
-import HCaptcha from "@hcaptcha/react-hcaptcha";
 import InputError from '@/Components/InputError';
 import { useForm } from '@inertiajs/react';
 
@@ -13,24 +12,7 @@ export default function Index({semester}) {
         cpf: '',
         rg: '',
         birth: '',
-        h_captcha_response: ''
     });
-    const [token, setToken] = useState(null);
-    const captchaRef = useRef(null);
-
-    const onLoad = () => {
-        // this reaches out to the hCaptcha JS API and runs the
-        // execute function on it. you can use other functions as
-        // documented here:
-        // https://docs.hcaptcha.com/configuration#jsapi
-        captchaRef.current.execute();
-    };
-
-    useEffect(() => {
-        if (token) {
-            setData('h_captcha_response', token);
-        }
-    }, [token]);
 
     const onHandleChange = (event) => {
         setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
@@ -40,8 +22,7 @@ export default function Index({semester}) {
         e.preventDefault();
         post(route("home.enrollments.post"), {
             preserveScroll: true,
-            onError: () => {captchaRef.current.resetCaptcha()},
-            onSuccess: () => {reset(); captchaRef.current.resetCaptcha()},
+            onSuccess: () => reset(),
         });
     };
 
@@ -117,15 +98,6 @@ export default function Index({semester}) {
                                     required
                                     processing={processing}
                                 />
-                            </div>
-                            <div className='flex flex-col items-center justify-center px-2 py-1'>
-                                <HCaptcha
-                                    sitekey="7d7ab47a-b312-4e51-a24f-3f741c63582c"
-                                    onVerify={setToken}
-                                    // onLoad={onLoad}
-                                    ref={captchaRef}
-                                />
-                                <InputError message={errors.h_captcha_response} className="mt-2" />
                             </div>
                         </Panel>
                         <Panel className={'mt-2 flex justify-center items-center gap-2'}>
